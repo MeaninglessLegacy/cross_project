@@ -2,21 +2,30 @@
 ############################################################################
 
 
-import pygame, math
 
-import Game_Scripts.basic_game_mechanics, Game_Scripts.functions
+import math
+
+import Game_Scripts.basic_game_mechanics,\
+    Game_Scripts.functions
 
 functions = Game_Scripts.functions
 basic_game_mechanics = Game_Scripts.basic_game_mechanics
 
 
+
 ############################################################################
 ############################################################################
+
+
 
 tile_set = []
 
+
+
 ############################################################################
 ############################################################################
+
+
 
 class tile():
     def __init__(self, x, y, z, fillColor, gridTile, tileSize):
@@ -30,6 +39,8 @@ class tile():
         self.gridPos = gridTile
         self.occupied = False
         self.tileEffects = []
+
+
 
 ############################################################################
 ############################################################################
@@ -45,12 +56,13 @@ class attack():
         self.breakShields = breakShields
 
 
+
 ############################################################################
 ############################################################################
 
 #2D Tile Map Generation
 
-def updateTileEffects(tileset, ch):
+def update_tile_effects(tileset, ch):
     #get all tiles
     effect_tiles = []
     for i in range(0,len(tileset)):
@@ -78,7 +90,7 @@ def updateTileEffects(tileset, ch):
                         #chr in the ch
                         chr = ch[key]
                         if chr.stats.current_Tile == tile_pos and chr.stats.team != init_team:
-                            basic_game_mechanics.damageTarget(tile.tileEffects[tileEffect].initiator, chr, tile.tileEffects[tileEffect])
+                            basic_game_mechanics.damage_target(tile.tileEffects[tileEffect].initiator, chr, tile.tileEffects[tileEffect])
         # remove dead tile effects
         for d in dead_tile_effects:
             effect_tiles[i].tileEffects.remove(d)
@@ -91,13 +103,17 @@ def updateTileEffects(tileset, ch):
                 if tile.tileEffects[tileEffect].ticks > 0:
                     tile.tileEffects[tileEffect].ticks -= 1
 
-def updateTileSet(new_tile_set):
+
+
+def update_tile_set(new_tile_set):
 
     global tile_set
 
     tile_set = new_tile_set
 
-def createTileEffect(effect, tile):
+
+
+def create_tile_effect(effect, tile):
 
     global tile_set
 
@@ -109,7 +125,9 @@ def createTileEffect(effect, tile):
             if each_tile.gridPos == tile:
                 each_tile.tileEffects.append(effect)
 
-def tileSet2D(a, b, x, y, z, size):
+
+
+def tile_set_2d(a, b, x, y, z, size):
 
     tiles = []
 
@@ -124,7 +142,9 @@ def tileSet2D(a, b, x, y, z, size):
 
     return  tiles
 
-def borders2D(tileset):
+
+
+def borders_2d(tileset):
 
     tileset = tileset
 
@@ -138,7 +158,9 @@ def borders2D(tileset):
 
     return bordercorners
 
-def updateSpriteTiles(tileset, ch, players):
+
+
+def update_sprite_tiles(tileset, ch, players):
 
     #Reset All Tiles
     for tile in tile_set:
@@ -157,7 +179,7 @@ def updateSpriteTiles(tileset, ch, players):
 
             d.append(math.sqrt(x*x+y*y))
 
-        sD = functions.copyArray(d)
+        sD = functions.copy_array(d)
         sD.sort()
 
         fKey = []
@@ -176,29 +198,30 @@ def updateSpriteTiles(tileset, ch, players):
         ch[key].stats.current_Tile = tileset[i].gridPos
 
 
+
 ############################################################################
 ############################################################################
 
 #3D Tile Map Generation
 
-def tileSet3D(a, b, c, x, y, z, tileSize):
-    #Input Coords = (Top Left Block Coords (Centre))
-
-    #A = HOR, B = VERT, C = DEPTH
-    #Array: [horizontal][vertical][depth]
-
-    tiles = []
-
-    for iA in range(0, a):
-        for iB in range(0, b):
-            for iC in range(0, c):
-                #print(blockWidth)
-                bX = x + iA*tileSize
-                bY = y - iB*tileSize
-                bZ = z + iC*tileSize
-                #newtile
-                new_tile = tile(bX, bY, bZ, (0, 0, 0), [iA,iC], tileSize)
-                tiles.append(new_tile)
-
-
-    return tiles
+# def tileSet3D(a, b, c, x, y, z, tileSize):
+#     #Input Coords = (Top Left Block Coords (Centre))
+#
+#     #A = HOR, B = VERT, C = DEPTH
+#     #Array: [horizontal][vertical][depth]
+#
+#     tiles = []
+#
+#     for iA in range(0, a):
+#         for iB in range(0, b):
+#             for iC in range(0, c):
+#                 #print(blockWidth)
+#                 bX = x + iA*tileSize
+#                 bY = y - iB*tileSize
+#                 bZ = z + iC*tileSize
+#                 #newtile
+#                 new_tile = tile(bX, bY, bZ, (0, 0, 0), [iA,iC], tileSize)
+#                 tiles.append(new_tile)
+#
+#
+#     return tiles

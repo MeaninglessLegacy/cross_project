@@ -1,29 +1,21 @@
-import pygame, sys, math, os.path, threading, pyglet, time
+############################################################################
+############################################################################
 
-#Tkinter stuff
-pygame.init()
+import pygame,\
+    sys,\
+    math,\
+    os.path,\
+    threading,\
+    pyglet,\
+    time
 
-pygame.mixer.pre_init(44100,-16,8, 4096)
 
-display = pyglet.canvas.get_display()
 
-#screen
-#w = 512
-#h = 288
-#w = 1024
-#h = 576
-w = 1280
-h = 720
-#clock
-t = pygame.time.Clock()
+############################################################################
+############################################################################
 
 #At the end replace all file paths with this
 filepath = os.path.dirname(__file__)
-
-############################################################################
-############################################################################
-
-
 
 mousePos = (0,0)
 
@@ -34,37 +26,57 @@ event = "NONE"
 ############################################################################
 ############################################################################
 
-#Screens
-#Main Screen that the game is drawn on
+#PYGAME INIT
 
-bgVertexList = {}
+pygame.init()
 
-combat_UI = pyglet.graphics.Batch()
+pygame.mixer.pre_init(44100,-16,8, 4096)
 
-main_batch = pyglet.graphics.Batch()
+t = pygame.time.Clock()
 
-background_batch = pyglet.graphics.Batch()
 
-title_screen = pyglet.graphics.Batch()
+#PYGLET INIT
 
-background_screen = pyglet.graphics.Batch()
+display = pyglet.canvas.get_display()
 
-loading_screen = pyglet.graphics.Batch()
+window_w = 1280
+window_h = 720
 
-generic_screen = pyglet.graphics.Batch()
+batchedItems = {}
+
+uiBatch = pyglet.graphics.Batch()
+
+worldBatch = pyglet.graphics.Batch()
+
+backgroundBatch = pyglet.graphics.Batch()
+
+
 
 ############################################################################
 ############################################################################
 
-#Importing Other Scripts
+#Importing Scripts
 
-import Game_Scripts.functions, Game_Scripts.sprites, Game_Scripts.animations, Game_Scripts.controls, Game_Scripts.renderer, Game_Scripts.tileMap, Game_Scripts.animator, Game_Scripts.combat_UI, Game_Scripts.actions_manager, Game_Scripts.basic_game_mechanics, Game_Scripts.stage_Manager, Game_Scripts.stages, Game_Scripts.ui_elements, Game_Scripts.screen_layouts
+import Game_Scripts.functions,\
+    Game_Scripts.sprites,\
+    Game_Scripts.animations,\
+    Game_Scripts.controls,\
+    Game_Scripts.renderer,\
+    Game_Scripts.tileMap,\
+    Game_Scripts.animator,\
+    Game_Scripts.combat_ui,\
+    Game_Scripts.actions_manager,\
+    Game_Scripts.basic_game_mechanics,\
+    Game_Scripts.stage_manager,\
+    Game_Scripts.stages,\
+    Game_Scripts.ui_elements,\
+    Game_Scripts.screen_layouts
 
 #Extraenous functions such as copying arrays
 functions = Game_Scripts.functions
 
 #sprites
-#sprites.sprite(self, name, x, y, z, w, h, imgUrl, animationSet, animated) is class object of sprite
+#sprites.sprite(self, name, x, y, z, window_w, window_h, imgUrl, animationSet, animated) is class object of sprite
 #sprites.character() is class object of all characters
 sprites = Game_Scripts.sprites
 
@@ -74,9 +86,9 @@ sprites = Game_Scripts.sprites
 animations = Game_Scripts.animations
 
 #controls
-#controls.sC(ch) selected character returns key of the character in the dicitonary so to use, use ch[sC(ch)]
-#controls.change_sC(character, ch) change selected character
-#controls.keyPress(ch, cam, borders) key press event
+#controls.sC(chrList) selected character returns key of the character in the dicitonary so to use, use chrList[sC(chrList)]
+#controls.change_sC(character, chrList) change selected character
+#controls.keyPress(chrList, cam, borders) key press event
 controls = Game_Scripts.controls
 
 #renderer
@@ -85,11 +97,11 @@ controls = Game_Scripts.controls
 renderer = Game_Scripts.renderer
 
 #3dTileMap
-tileMapper = Game_Scripts.tileMap
+tile_map = Game_Scripts.tileMap
 
 #animate the animations
-#animationManager(objects_to_animate, ch)
-#animationPlayer(sprite, animation, ch)
+#animationManager(objToAnimate, chrList)
+#animationPlayer(sprite, animation, chrList)
 #addAnimation(character, animation)
 #removeAnimation(character, animation)
 animator = Game_Scripts.animator
@@ -97,8 +109,8 @@ animator = Game_Scripts.animator
 #ui_elements
 ui_elements = Game_Scripts.ui_elements
 
-#combat_UI manager
-combat_UI_manager = Game_Scripts.combat_UI
+#ui manager
+combat_ui_manager = Game_Scripts.combat_ui
 
 #actions manager
 actions_manager = Game_Scripts.actions_manager
@@ -107,7 +119,7 @@ actions_manager = Game_Scripts.actions_manager
 basic_game_mechanics = Game_Scripts.basic_game_mechanics
 
 #stage manager, set stage, begin battles, end battles, set backgrounds
-stage_manager = Game_Scripts.stage_Manager
+stage_manager = Game_Scripts.stage_manager
 
 #stages
 stages_list = Game_Scripts.stages
@@ -115,21 +127,15 @@ stages_list = Game_Scripts.stages
 #screen layouts UI related
 screen_layouts = Game_Scripts.screen_layouts
 
+
+
 ############################################################################
 ############################################################################
 
-#Game Variables
 
-gameStart = True
 
-game_fps = animations.fps
-
-fps = animations.fps
-
-#characters
-ch = {}
-
-#players
+#Character List
+chrList = {}
 
 players = {
     "player_1" : {
@@ -184,50 +190,80 @@ players = {
     },
 }
 
-#render type 3d cam can also be used for 2.5D
-#cam = renderer.camera2D(550, 100, 0)
-cam=renderer.camera3D(20, -20, 15, 0, 0)
+
+
+############################################################################
+############################################################################
+
+
+
+#init of game
+gameStart = True
+
+gameFps = animations.fps
+
+fps = animations.fps
 
 #animate objects
-objects_to_animate = []
+objToAnimate = []
 
 #ojbects to update movement
-objects_to_manage = []
-
-#Map-Temporary
-#tile_set = tileMapper.tileSet3D(15, 1, 10, 0, 0, -15, 0.5)
-tile_set = tileMapper.tileSet2D(20,10,0,0,-15,3)
-borders = tileMapper.borders2D(tile_set)
-
-#Stage
-#current_stage = stages_list.stages['bridge_1']
-current_stage = stages_list.stages['blank']
-#current_stage = stages_list.stages['field_day_1']
+objToManage = []
 
 #ui_elements on screen
-ui_elements_list = []
+objOfUi = []
+
+#render type 3d cam can also be used for 2.5D
+#cam = renderer.camera2D(550, 100, 0)
+cam=renderer.camera_3d(20, -20, 15, 0, 0)
+
+#Map-Temporary
+#tileSet = tile_map.tileSet3D(15, 1, 10, 0, 0, -15, 0.5)
+tileSet = tile_map.tile_set_2d(20,10,0,0,-15,3)
+borders = tile_map.borders_2d(tileSet)
+
+#Stage
+#currentStage = stages_list.stages['bridge_1']
+currentStage = stages_list.stages['blank']
+#currentStage = stages_list.stages['field_day_1']
+
+
 
 ############################################################################
 ############################################################################
 
-#Game Logic Variables
 
-#what screen we are at
+#Screen Elements
 screen = "title"
 
 #the last screen
-previous_screen = ""
+previousScreen = ""
 
 #change screen
-change_screen = ""
+changeScreen = ""
 
-#teams
+loadScreenElements = []
+loadTransition = 0
+delay = 0
+
+drawList = []
+
+
+
+############################################################################
+############################################################################
+
+
+
+#game variables
 teams = None
 
+
+
 ############################################################################
 ############################################################################
 
-ch["tank"] = sprites.character(
+chrList["tank"] = sprites.character(
     spriteObject=sprites.sprite(
         name = "tank",
         x=1056,
@@ -255,7 +291,7 @@ ch["tank"] = sprites.character(
     playerCharacter = True,
 )
 
-ch["dummy"] = sprites.character(
+chrList["dummy"] = sprites.character(
     spriteObject=sprites.sprite(
         name = "dummy",
         x=72,
@@ -283,61 +319,65 @@ ch["dummy"] = sprites.character(
     playerCharacter = True
 )
 
-############################################################################
-############################################################################
 
-load_screen_elements = []
-load_transition = 0
-delay = 0
+
+############################################################################
+############################################################################
 
 #functions switching between screens
 
-def changeScreen(new_screen):
+def change_screen(new_screen):
 
-    global load_transition, change_screen, screen
+    global loadTransition, changeScreen, screen
 
-    change_screen = new_screen
+    changeScreen = new_screen
 
     screen = "load"
 
+
+
 def load_animation():
 
-    global load_transition, loading_screen, load_screen_elements, delay, screen, change_screen
-    #bgVertexList[len(bgVertexList)+1] = pyglet.shapes.Rectangle(0, 0, w, h, color=(0, 0, 0), batch=loading_screen)
+    global loadTransition, loadingBatch, loadScreenElements, delay, screen, changeScreen
+    #batchedItems[len(batchedItems)+1] = pyglet.shapes.Rectangle(0, 0, window_w, window_h, color=(0, 0, 0), batch=loadingBatch)
 
-    if len(load_screen_elements) > 0:
-        for i in range(0, len(load_screen_elements)):
-            if load_screen_elements[i].name == 'loading_label':
+    if len(loadScreenElements) > 0:
+        for i in range(0, len(loadScreenElements)):
+            if loadScreenElements[i].name == 'loading_label':
                 if delay == 0:
                     delay = math.floor(fps / 4)
-                    if load_screen_elements[i].text == 'Loading':
-                        load_screen_elements[i].text = 'Loading.'
-                    elif load_screen_elements[i].text == 'Loading.':
-                        load_screen_elements[i].text = 'Loading..'
-                    elif load_screen_elements[i].text == 'Loading..':
-                        load_screen_elements[i].text = 'Loading...'
-                    elif load_screen_elements[i].text == 'Loading...':
-                        load_screen_elements[i].text = 'Loading'
+                    if loadScreenElements[i].text == 'Loading':
+                        loadScreenElements[i].text = 'Loading.'
+                    elif loadScreenElements[i].text == 'Loading.':
+                        loadScreenElements[i].text = 'Loading..'
+                    elif loadScreenElements[i].text == 'Loading..':
+                        loadScreenElements[i].text = 'Loading...'
+                    elif loadScreenElements[i].text == 'Loading...':
+                        loadScreenElements[i].text = 'Loading'
                 else:
                     delay -= 1
 
-            ui_elements.draw_ui_element(load_screen_elements[i], loading_screen, w, h)
+            ui_elements.draw_ui_element(loadScreenElements[i], loadingBatch, window_w, window_h)
+
+
 
 def load_screen():
 
-    global load_transition, loading_screen, load_screen_elements, delay, screen, change_screen
+    global loadTransition, loadingBatch, loadScreenElements, delay, screen, changeScreen
 
     load_animation()
 
-    if load_transition <= fps:
+    if loadTransition <= fps:
 
-        load_transition += 1
+        loadTransition += 1
 
-    elif load_transition > fps:
+    elif loadTransition > fps:
 
-        load_transition = 0
+        loadTransition = 0
 
-        screen = change_screen
+        screen = changeScreen
+
+
 
 ############################################################################
 ############################################################################
@@ -345,7 +385,7 @@ def load_screen():
 #Game Logic
 
 #combat win comditions = 1 team has zero participants remains
-def returnTeams(list_chrs):
+def return_teams(list_chrs):
     #first lets make a team dictionary
     teams = {}
 
@@ -361,6 +401,8 @@ def returnTeams(list_chrs):
 
     return teams
 
+
+
 #how many live team members there are
 def return_alive_members(teams):
 
@@ -374,6 +416,8 @@ def return_alive_members(teams):
 
     return  live_count
 
+
+
 #win conditions
 def win_conditions(win_conditions):
 
@@ -382,20 +426,22 @@ def win_conditions(win_conditions):
         win_condition = win_conditions[i]
         #elimate win condition
         if win_condition == 'eliminate':
-            teams = returnTeams(ch)
+            teams = return_teams(chrList)
             alive_members = return_alive_members(teams)
             for team in alive_members:
                 if alive_members[team] == 0:
                     return True
     return False
 
+
+
 ############################################################################
 ############################################################################
 
 #Title Screen
-def title_Screen():
+def title_screen():
 
-    global  ui_elements_list, title_screen, ch, gameStart, s, mouse_pos
+    global  objOfUi, worldBatch, chrList, gameStart, s, mouse_pos
 
     # we need mouse position
     mouse_pos = mousePos
@@ -403,51 +449,49 @@ def title_Screen():
     # draw animated background and stuff
 
     # draw ui_stuff
-    if len(ui_elements_list) > 0:
+    if len(objOfUi) > 0:
 
-        for i in range(0, len(ui_elements_list)):
-            ui_elements.draw_ui_element(ui_elements_list[i], title_screen, w, h)
-            ui_elements.mouseHover(ui_elements_list[i], title_screen, mouse_pos, w, h)
+        for i in range(0, len(objOfUi)):
+            ui_elements.draw_ui_element(objOfUi[i], uiBatch, batchedItems, window_w, window_h)
+            ui_elements.mouse_hover(objOfUi[i], mouse_pos, window_w, window_h)
 
             # Button Interactivity
-            if hasattr(ui_elements_list[i], 'mouseOver'):
-                if ui_elements_list[i].mouseOver == True:
-                    ui_elements_list[i].text_color = (0, 255, 255)
-                    ui_elements_list[i].x_position = 0.8
-                    ui_elements_list[i].width = 0.3
-                elif ui_elements_list[i].mouseOver == False:
-                    ui_elements_list[i].text_color = (255, 255, 255)
-                    ui_elements_list[i].x_position = 0.9
-                    ui_elements_list[i].width = 0.2
-                if ui_elements_list[i].mouseOver == True and event == pyglet.window.mouse.LEFT:
-                     if ui_elements_list[i].name == "duel_button":
+            if hasattr(objOfUi[i], 'mouseOver'):
+                if objOfUi[i].mouseOver == True:
+                    objOfUi[i].text_color = (0, 255, 255)
+                    objOfUi[i].x_position = 0.85
+                    objOfUi[i].width = 0.15
+                elif objOfUi[i].mouseOver == False:
+                    objOfUi[i].text_color = (255, 255, 255)
+                    objOfUi[i].x_position = 0.9
+                    objOfUi[i].width = 0.1
+                if objOfUi[i].mouseOver == True and event == pyglet.window.mouse.LEFT:
+                     if objOfUi[i].name == "duel_button":
                          # should bring us to a stage and character selection menu
-                         for chr in ch:
-                             ch[chr].stats.currentHP = ch[chr].stats.maxHP
-                         changeScreen("combat")
-                     elif ui_elements_list[i].name == "quit_button":
+                         for chr in chrList:
+                             chrList[chr].stats.currentHP = chrList[chr].stats.maxHP
+                         change_screen("combat")
+                     elif objOfUi[i].name == "quit_button":
                          gameStart = False
 
-    title_screen.draw()
+
 
 ############################################################################
 ############################################################################
-
-drawList = []
 
 #Load Encounter
-def load_Encounter():
+def load_encounter():
 
-    global game_fps, objects_to_animate, objects_to_manage, cam, current_stage, ch, tile_set, borders, teams, drawList, ui_elements_list, previous_screen
+    global gameFps, objToAnimate, objToManage, cam, currentStage, chrList, tileSet, borders, teams, drawList, objOfUi, previousScreen
 
-    animations.update_fps(game_fps)
+    animations.update_fps(gameFps)
 
     # first time we arrive on this screen
-    ui_elements_list = []
+    objOfUi = []
 
     # we need to load everything right?
     '''
-    1.add characters to ch
+    1.add characters to chrList
     2.load stage
     3.load character animations
     4.add characters to manager and animator
@@ -456,32 +500,32 @@ def load_Encounter():
     6.countdown battle
     '''
     # set the proper fps tick
-    game_fps = fps
+    gameFps = fps
     # clear old slates
-    objects_to_manage = []
-    objects_to_animate = []
+    objToManage = []
+    objToAnimate = []
     # center camera
-    cam.x = current_stage['camera_spawn'][0]
-    cam.y = current_stage['camera_spawn'][1]
-    cam.z = current_stage['camera_spawn'][2]
+    cam.x = currentStage['camera_spawn'][0]
+    cam.y = currentStage['camera_spawn'][1]
+    cam.z = currentStage['camera_spawn'][2]
     # loading the characters
-    for chr in ch:
-        load_thread = functions.loadThread(1, "Load-Thread", animations.animations[ch[chr].stats.chrClass],
-                                           current_stage)
+    for chr in chrList:
+        load_thread = functions.loadThread(1, "Load-Thread", animations.animations[chrList[chr].stats.chrClass],
+                                           currentStage)
         load_thread.start()
         # check to see if our threads have loaded
         while load_thread.loaded == False:
             load_animation()
-        objects_to_animate.append(ch[chr])
-        objects_to_manage.append(ch[chr])
+        objToAnimate.append(chrList[chr])
+        objToManage.append(chrList[chr])
     screen = "combat"
-    previous_screen = "combat"
+    previousScreen = "combat"
     # setting up the map
-    tile_set = current_stage['map']['tile_set']
-    borders = tileMapper.borders2D(tile_set)
+    tileSet = currentStage['map']['tile_set']
+    borders = tile_map.borders_2d(tileSet)
     # spawning the characters
-    teams = returnTeams(ch)
-    spawn_locations = current_stage['spawns']
+    teams = return_teams(chrList)
+    spawn_locations = currentStage['spawns']
     # first we need to assign each team a slot for spawning
     slots_assigned = {}
     for team in teams:
@@ -495,58 +539,64 @@ def load_Encounter():
             else:
                 slots_assigned[team] = spawn_locations[i]
             for chr in teams[team]:
-                ch[chr].spriteObject.x = slots_assigned[team][0]
-                ch[chr].spriteObject.y = slots_assigned[team][1]
+                chrList[chr].spriteObject.x = slots_assigned[team][0]
+                chrList[chr].spriteObject.y = slots_assigned[team][1]
     # transition into combat
     # functions.updateBorders(borders)
     # Add Stuff to Render
     drawList = []
-    drawList.append(ch["tank"].spriteObject)
-    drawList.append(ch["dummy"].spriteObject)
-    drawList.extend(tile_set)
-    combat_UI_manager.battle_Start_Trigger(game_fps*2)
+    drawList.append(chrList["tank"].spriteObject)
+    drawList.append(chrList["dummy"].spriteObject)
+    drawList.extend(tileSet)
+    combat_ui_manager.battle_start_trigger(gameFps*2)
+
+
+
+############################################################################
+############################################################################
+
 
 
 def game_mechanics():
-    global tile_set, ch, players, borders, objects_to_manage, objects_to_animate, drawList, cam, borders, s, current_stage,background_screen, combat_UI, w, h, teams, bgVertexList
+    global tileSet, chrList, players, borders, objToManage, objToAnimate, drawList, cam, borders, s, currentStage, uiBatch, window_w, window_h, teams, batchedItems
     # update tiles
-    tileMapper.updateTileSet(tile_set)
+    tile_map.update_tile_set(tileSet)
     # Update Sprite Locations on Grid Pos
-    tileMapper.updateSpriteTiles(tile_set, ch, players)
+    tile_map.update_sprite_tiles(tileSet, chrList, players)
     # Update Tile Effects
-    tileMapper.updateTileEffects(tile_set, ch)
+    tile_map.update_tile_effects(tileSet, chrList)
 
     # update borders
     functions.updateBorders(borders)
 
     # what to update actions for
-    actions_manager.action_manager(objects_to_manage, ch)
+    actions_manager.action_manager(objToManage, chrList)
     # What to animate
-    animator.animationManager(objects_to_animate, ch)
+    animator.animationManager(objToAnimate, chrList)
 
     # update the basic mechanics
-    basic_game_mechanics.updateBasicMechanics(ch)
+    basic_game_mechanics.update_basic_mechanics(chrList)
 
     # Render Options
-    renderer.flatRender(drawList, cam, borders, main_batch, current_stage, background_batch, ch, w, h, bgVertexList)
+    renderer.flat_render(drawList, cam, borders, currentStage, chrList, worldBatch, backgroundBatch, window_w, window_h, batchedItems)
     # renderer.render3D(drawList, cam, s)
 
     #######OVERLAY UIS
 
     # Draw UIs below renderer because renderer clears our screen
-    #combat_UI_manager.draw_combat_UI(s, combat_UI, w, h, ch, players, teams)
+    #combat_ui_manager.draw_combat_UI(s, uiBatch, window_w, window_h, chrList, players, teams)
 
-############################################################################
-############################################################################
 
-#Run Game
-def runGame():
 
-    global screen, previous_screen, ui_elements_list, event
+#Main Game Function
+
+def run_game():
+
+    global screen, previousScreen, objOfUi, event
 
     # fps at top of engine
     #pyglet.clock.tick()
-    #t.tick(game_fps)
+    #t.tick(gameFps)
     #print(t.get_fps())
     animations.update_fps(t.get_fps())
 
@@ -558,15 +608,15 @@ def runGame():
     #What to run on title screen
     if screen == "title":
 
-        if previous_screen != "title":
+        if previousScreen != "title":
 
 
             #first time we arrive on this screen
-            ui_elements_list = []
-            previous_screen = "title"
+            objOfUi = []
+            previousScreen = "title"
 
             #add all the buttons and stuff
-            ui_elements_list = screen_layouts.return_screen_elements('title_screen')
+            objOfUi = screen_layouts.return_screen_elements('title_screen')
 
             stage_manager.set_bgm('Stage_Assets/bgm/The Last Encounter Collection/TLE INTERLUDE A-STANDALONE LOOP.wav')
             pygame.mixer.music.set_volume(0.6)
@@ -574,14 +624,14 @@ def runGame():
 
         else:
 
-            title_Screen()
+            title_screen()
 
     #What to run if screen is combat
     if screen == "combat":
 
         #first time on this screen
-        if previous_screen != "combat":
-            load_Encounter()
+        if previousScreen != "combat":
+            load_encounter()
 
         win_con = win_conditions(['eliminate'])
 
@@ -589,40 +639,40 @@ def runGame():
 
             #Controls
             #key press events
-            #controls.keyPress3D(ch, cam)
-            stage_manager.music_stage(current_stage, 0)
+            #controls.keyPress3D(chrList, cam)
+            stage_manager.music_stage(currentStage, 0)
             for player in players:
                 if players[player]['control_type'] == 'keyboard':
-                    controls.keyPress2D(ch, borders, cam, players, player)
+                    controls.main_controls_2d(chrList, borders, cam, players, player)
 
         elif win_con == True:
-            finish = stage_manager.music_stage(current_stage, 1)
+            finish = stage_manager.music_stage(currentStage, 1)
             for player in players:
                 if players[player]['control_type'] == 'keyboard':
-                    controls.keyPress2D(ch, borders, cam, players, player)
+                    controls.main_controls_2d(chrList, borders, cam, players, player)
             #battle end animations before leaving
             if finish == False:
                 pass
             elif finish == True:
-                changeScreen('title')
+                change_screen('title')
 
         # start combat
         game_mechanics()
 
-        if combat_UI_manager.start_trigger == True:
-            combat_UI_manager.start_trigger = False
-            #combat_UI_manager.battle_Start_Animation(main_batch, generic_screen, "BATTLE START", w, h)
-            for chr in ch:
-                ch[chr].stats.canMove = True
+        if combat_ui_manager.start_trigger == True:
+            combat_ui_manager.start_trigger = False
+            #combat_ui_manager.battle_Start_Animation(worldBatch, generic_screen, "BATTLE START", window_w, window_h)
+            for chr in chrList:
+                chrList[chr].stats.canMove = True
 
     elif screen =='load':
         pygame.time.delay(fps)
-        if previous_screen != "load":
-            previous_screen = "load"
+        if previousScreen != "load":
+            previousScreen = "load"
             pygame.mixer.stop()
-            functions.clearCaches()
-            load_screen_elements = screen_layouts.return_screen_elements('loading_screen')
-        elif previous_screen == "load":
+            functions.clear_caches()
+            loadScreenElements = screen_layouts.return_screen_elements('loadingBatch')
+        elif previousScreen == "load":
             load_screen()
     #failsaif
     elif screen == '' or screen == None:
@@ -631,36 +681,44 @@ def runGame():
 
 
 
+############################################################################
+############################################################################
+
+
+
 class main(pyglet.window.Window):
+
     def __init__ (self):
-        super(main, self).__init__(w, h, fullscreen=False, vsync=False)
+        super(main, self).__init__(window_w, window_h, fullscreen=False, vsync=False)
 
         self.running = True
 
+
+
     def on_draw(self):
-        self.render()
+        self.flip()
+        pass
+
+
 
     def render(self):
 
-        # And flip the GL buffer
+        self.clear()
+
         if screen == "combat":
-            background_batch.draw()
-            main_batch.draw()
+            backgroundBatch.draw()
+            worldBatch.draw()
         else:
-            title_screen.draw()
-        combat_UI.draw()
-        background_screen.draw()
-        loading_screen.draw()
-        generic_screen.draw()
+            worldBatch.draw()
+        uiBatch.draw()
 
         self.flip()
 
-        # print(bgVertexList)
-        for i in bgVertexList:
-            bgVertexList[i].delete()
-        bgVertexList.clear()
+        for index in list(batchedItems):
+            batchedItems[index].delete()
+            del (batchedItems[index])
 
-        self.clear()
+
 
     def run(self):
         #time.sleep(1 / (fps + 30))
@@ -672,23 +730,9 @@ class main(pyglet.window.Window):
 
         self.render()
 
-        runGame()
-        # while self.running is True:
-        #
-        #     time.sleep(1/(fps+30))
-        #
-        #     dt = pyglet.clock.tick()
-        #     print(pyglet.clock.get_fps())
-        #
-        #     event = None
-        #
-        #     self.render()
-        #
-        #     runGame()
-        #
-        #     event = self.dispatch_events()
-        #     if event and event.type == pygame.QUIT:
-        #         self.running = False
+        run_game()
+
+
 
     def on_mouse_motion(window, x, y, dx, dy):
         global mousePos, event
@@ -709,25 +753,22 @@ class main(pyglet.window.Window):
         controls.keysPressed[symbol] = False
         pass
 
-    def on_draw(window):
-
-        if screen == "combat":
-            background_batch.draw()
-            main_batch.draw()
-        else:
-            title_screen.draw()
-        combat_UI.draw()
-        background_screen.draw()
-        loading_screen.draw()
-        generic_screen.draw()
-        window.flip()
 
 
-newObj = main()
+############################################################################
+############################################################################
 
+#Create Game Object
+gameObj = main()
+
+
+
+#Start the Game
 def update(dt):
     #print(1/dt)
-    newObj.run()
+    gameObj.run()
 
+
+    
 pyglet.clock.schedule_interval(update, 1/fps)
 pyglet.app.run()

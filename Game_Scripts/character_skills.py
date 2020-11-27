@@ -3,22 +3,27 @@
 
 #Character Skills
 
-import pygame, math
-
 import Game_Scripts.functions
 
 functions = Game_Scripts.functions
+
+
 
 ############################################################################
 ############################################################################
 
 #skills
-import Game_Scripts.skills.tank_skills
+
+import Game_Scripts.Character_Skills.tank_skills
+
+
+
 
 #import the skills
-skills_folder = Game_Scripts.skills
+skills_folder = Game_Scripts.Character_Skills
 
 tank_skills = skills_folder.tank_skills
+
 
 
 #put skills into dictionary
@@ -27,20 +32,24 @@ abilities = {
     'tank' : tank_skills,
 }
 
+
+
 ############################################################################
 ############################################################################
 
 #returns the skills of the character
-def returnSkills(chr):
+
+def return_skills(chr):
     chrClass = chr.stats.chrClass
     if chrClass in abilities:
         return abilities[chrClass]
 
 
+
 #Main useSkillFunction
-def useSkill(chr, skill, player):
+def use_skill(chr, skill, player):
     #return skill set
-    skill_set = returnSkills(chr)
+    skill_set = return_skills(chr)
 
     #if our skill set exists
     if not skill_set is None:
@@ -77,9 +86,11 @@ def useSkill(chr, skill, player):
 
     return False
 
-def checkHeldSkill(chr, skill):
+
+
+def check_held_skill(chr, skill):
     # return skill set
-    skill_set = returnSkills(chr)
+    skill_set = return_skills(chr)
     # if our skill set exists
     if not skill_set is None:
         # first skill is activated

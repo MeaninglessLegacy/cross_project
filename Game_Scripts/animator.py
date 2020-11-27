@@ -1,7 +1,8 @@
 ############################################################################
 ############################################################################
 
-import math, Game_Scripts.functions
+import math,\
+    Game_Scripts.functions
 
 functions = Game_Scripts.functions
 
@@ -116,7 +117,7 @@ def animationPlayer(sprite, animation, ch):
                             frame = 0
 
                 # set frame
-                sprite.changeImage(get_Frames[frame])
+                sprite.change_image(get_Frames[frame])
 
                 #play sounds
                 sounds = get_Animation['sounds']
@@ -150,6 +151,8 @@ def addAnimation(character, animation):
     if not animation in character.spriteObject.animationList :
         #add if only not in list
         character.spriteObject.animationList.append(animation)
+
+
 
 def removeAnimation(character, animation):
 

@@ -1,33 +1,41 @@
 ############################################################################
 ############################################################################
 
-
 #Stage Manager set stage backgrounds, music etc.
 
-import pygame, math, Game_Scripts.stages, Game_Scripts.functions
+import pygame,\
+    math,\
+    Game_Scripts.stages,\
+    Game_Scripts.functions
 
 
 functions = Game_Scripts.functions
 
 stages = Game_Scripts.stages
 
+
+
 ############################################################################
 ############################################################################
+
+
 
 stage_bgm = None
 
 music_inc = 0
 
+
+
 ############################################################################
 ############################################################################
 
-def drawBackground(background_img, screen, cam, w, h):
+
+
+def draw_background(background_img, screen, cam, w, h):
     # Load the image
     img = functions.get_image(background_img['img'], False)
     img_pos = background_img['position']
-    #pygame.transform.scale(img, (math.floor(screen.get_width() * background_img['scale'][0]),math.floor(screen.get_height() * background_img['scale'][1])), screen)
-    scaled_img = functions.get_scaled_image(img, background_img['img'], (math.floor(w * background_img['scale'][0]),math.floor(h * background_img['scale'][1])), 200)
-    screen.blit(scaled_img, (0,0))
+    screen.blit(img, img_pos)
     # If a position is specified otherwise it is fixed
     '''if img_pos != None:
         xPos = cam.x*10 - img_pos[0]
@@ -35,6 +43,7 @@ def drawBackground(background_img, screen, cam, w, h):
         screen.blit(img, (xPos, 0))
     else:
         screen.blit(img, (0, 0))'''
+
 
 
 def determine_regions(layer, cam, s):
@@ -67,7 +76,7 @@ def determine_regions(layer, cam, s):
         z = vt[i][2]
 
         # dC.append(distort2DCamera(x,y,cam,s))
-        dC.append(functions.distortPoint(x, y, z, cam, s))
+        dC.append(functions.distort_point(x, y, z, cam, s))
 
     #pygame.draw.polygon(s, (25, 25, 25), [dC[1], dC[3], dC[2], dC[0]], 0)
 
@@ -80,17 +89,19 @@ def determine_regions(layer, cam, s):
         if space.width < 5000 or space.height < 5000:
 
             #image = pygame.transform.scale(image, (space.width, space.height))
-            image = functions.get_scaled_image(image, layer['img'], (space.width, space.height), 200)
+            image = functions.get_image(layer['img'], True)
 
         s.blit(image, space)
 
+
+
 #main function
-def renderStage2D(stage, screen, cam, layer, w, h):
+def render_stage(stage, screen, cam, layer, w, h):
 
     background_screen = screen
     #Background
     if stage['background']['visible'] != False and layer == 2:
-        drawBackground(stage['background'], background_screen, cam, w, h)
+        draw_background(stage['background'], background_screen, cam, w, h)
     #Mid ground
     if stage['middle_ground']['visible'] != False and layer == 2:
         determine_regions(stage['middle_ground'], cam, screen)
@@ -105,11 +116,13 @@ def renderStage2D(stage, screen, cam, layer, w, h):
         determine_regions(stage['foreground'], cam, screen)
 
     return background_screen
-	
+
+
+
 def music_stage(stage, level):
 
     global stage_bgm, music_inc
-	
+
     #Background music
     if stage['bgm']['source'] != None and level == 0:
         get_bgm = stage['bgm']['source']
@@ -126,7 +139,7 @@ def music_stage(stage, level):
         if music_inc < stage['bgm']['fade_in_time']:
             music_inc += 1
             pygame.mixer.music.set_volume(stage['bgm']['volume']*(music_inc/stage['bgm']['fade_in_time']))
-			
+
     if stage['bgm']['source'] != None and level == 1:
         if music_inc > 0:
             music_inc -= 1
@@ -139,6 +152,7 @@ def music_stage(stage, level):
             return True
 
     return False
+
 
 
 def set_bgm(bgm):

@@ -2,7 +2,9 @@
 ############################################################################
 
 #SPRITES
-import pygame, math, Game_Scripts.functions
+import pygame,\
+    math,\
+    Game_Scripts.functions
 
 functions = Game_Scripts.functions
 
@@ -12,29 +14,30 @@ functions = Game_Scripts.functions
 ############################################################################
 
 #sprite class
-class sprite(pygame.sprite.Sprite):
+
+class sprite():
     def __init__(self, name, x, y, z, w, h, imgUrl, animationSet, animated, heading):
         #Basic Variables
         self.name = name
         self.x = x
         self.y = y
         self.z = z
+
         self.w = w
         self.h = h
         self.imgUrl = imgUrl
         self.trueSpr = None
 
         #Load Image
-        self.img = pygame.image.load(imgUrl)
-        self.img = pygame.transform.scale(self.img, (w, h))
+        self.img = None
 
-        #direction facing
+        #direction facing left/right
         self.heading = heading
-        #direction travel
+        #direction traveling
         self.direction = "east"
 
-        # spriteBox
-        self.spriteBox = spriteBox(self)
+        # sprite_box
+        self.sprite_box = sprite_box(self)
 
         #animations
         self.animationSet = animationSet
@@ -46,16 +49,15 @@ class sprite(pygame.sprite.Sprite):
         self.moving = False
         self.combat = True
 
-    def changeImage(self, imgUrl):
+    def change_image(self, imgUrl):
         self.imgUrl = imgUrl
-
         self.img = functions.get_image(self.imgUrl, True)
-        #self.img = pygame.transform.scale(self.img, (self.w, self.h))
 
-    def resetWH(self, w, h):
+    def reset_dimensions(self, w, h):
         self.w = w
         self.h = h
-        #self.img = pygame.transform.scale(self.img, (self.w, self.h))
+
+
 
 #Stats
 class stats():
@@ -91,14 +93,20 @@ class stats():
         self.knockedOut = False
         self.stunTimer = 0
 
+
+
 #character itself
 class character():
     #Add other stuff later
-    def __init__(self, spriteObject, isSelected, playerCharacter, stats):
+    def __init__(self, spriteObject, stats, isSelected, playerCharacter):
+
         self.spriteObject = spriteObject
         self.stats = stats
+
         self.isSelected = isSelected
         self.playerCharacter = playerCharacter
+
+
 
 ############################################################################
 ############################################################################
@@ -106,10 +114,10 @@ class character():
 #3D Sprites
 
 #Generate A Box For the Sprite for 3D Rendering
-class spriteBox(pygame.sprite.Sprite):
+class sprite_box(pygame.sprite.Sprite):
 
     def __init__(self, sprite):
-        pygame.sprite.Sprite.__init__(self)
+
         self.w = sprite.w
         self.h = sprite.h
 
@@ -119,14 +127,7 @@ class spriteBox(pygame.sprite.Sprite):
 
         self.vertexes = []
 
-    def updateSpriteBox(self, sprite, cam, s, w, h):
-        self.w = sprite.w
-        self.h = sprite.h
-
-        self.x = sprite.x
-        self.y = sprite.y
-        self.z = sprite.z
-
+    def update_sprite_box(self, sprite, cam, s, w, h):
         """
             Sprite Box
             1-------0
@@ -135,6 +136,12 @@ class spriteBox(pygame.sprite.Sprite):
             |       |
             2-------3
         """
+        self.w = sprite.w
+        self.h = sprite.h
+
+        self.x = sprite.x
+        self.y = sprite.y
+        self.z = sprite.z
 
         # vt vertices of the sprite box
         vt = []
@@ -152,7 +159,7 @@ class spriteBox(pygame.sprite.Sprite):
             y = vt[i][1]
             z = vt[i][2]
 
-            dC.append(functions.distortPoint(x, y, z, cam, s, w, h))
+            dC.append(functions.distort_point(x, y, z, cam, s, w, h))
 
         #give the vertexes of the box
         self.vertexes = dC
@@ -162,6 +169,7 @@ class spriteBox(pygame.sprite.Sprite):
         self.yScale = math.floor(math.fabs(dC[1][1]-dC[3][1]))
 
         self.rect = pygame.Rect(dC[2], (self.xScale, self.yScale))
+
 
 ############################################################################
 ############################################################################

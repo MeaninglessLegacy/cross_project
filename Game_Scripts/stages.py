@@ -48,7 +48,7 @@ stages = {
             #"source" : 'Stage_Assets/bgm/NO_EX01.mp3',
         },
         "map" : {
-            'tile_set' : tileMapper.tileSet2D(20,10,0,-2,-15,2),
+            'tile_set' : tileMapper.tile_set_2d(20,10,0,-2,-15,2),
         },
         "spawns" : [
             (36,8),
@@ -95,7 +95,7 @@ stages = {
             #"source" : 'Stage_Assets/bgm/NO_EX01.mp3',
         },
         "map" : {
-            'tile_set' : tileMapper.tileSet2D(40,1,0,-2,-15,2),
+            'tile_set' : tileMapper.tile_set_2d(40,1,0,-2,-15,2),
         },
         "spawns" : [
             (36,0.5),
@@ -141,7 +141,7 @@ stages = {
             "source" : 'Stage_Assets/bgm/NO_EX01.mp3',
         },
         "map" : {
-            'tile_set' : tileMapper.tileSet2D(40,3,0,0,-15,2),
+            'tile_set' : tileMapper.tile_set_2d(40,3,0,0,-15,2),
         },
         "spawns" : [
             (36,0.5),
@@ -151,7 +151,9 @@ stages = {
     }
 }
 
-def returnAsset(stage):
+
+
+def return_asset(stage):
     # check if stage exists
     if not stage in stages:
         # This makes sure even if we can't find the file it does not crash the engine.

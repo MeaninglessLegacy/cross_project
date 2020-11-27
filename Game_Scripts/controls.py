@@ -2,25 +2,34 @@
 ############################################################################
 
 
-import pygame, math, pyglet
 
-import Game_Scripts.animator, Game_Scripts.actions_manager, Game_Scripts.character_skills
+import pygame,\
+    pyglet
+
+import Game_Scripts.animator,\
+    Game_Scripts.actions_manager,\
+    Game_Scripts.character_skills
 
 animator = Game_Scripts.animator
 action_manager = Game_Scripts.actions_manager
 character_skills = Game_Scripts.character_skills
 
 
+
 ############################################################################
 ############################################################################
 
+
+
 #selected Character
-def sC(ch):
+def find_sc(ch):
     for key in ch:
         if ch[key].isSelected:
             return key
 
-def change_sC(players, player_key, o, ch):
+
+
+def change_sc(players, player_key, o, ch):
 
     k = ""
 
@@ -42,6 +51,8 @@ def change_sC(players, player_key, o, ch):
         if key != k and not ch[key] in player_chr:
             ch[key].isSelected = False
 
+
+
 def find_player(players, chr):
 
     for ply in players:
@@ -51,80 +62,12 @@ def find_player(players, chr):
 
     return None
 
-############################################################################
-############################################################################
-
-#3D Controls
-
-
-#Key pressed event
-
-def keyPress3D(ch, cam):
-    p = pygame.key.get_pressed()
-
-    global fps
-
-    if not ch[sC(ch)] is None:
-        animator.addAnimation(ch[sC(ch)], ch[sC(ch)].spriteObject.animationSet['combat_idle'])
-
-        #that list is what no keys pressed looks list
-        if p == (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) :
-            animator.removeAnimation(ch[sC(ch)], ch[sC(ch)].spriteObject.animationSet['combat_walk'])
-            pass
-
-    if p[pygame.K_d]:
-        if not ch[sC(ch)] is None:
-            ch[sC(ch)].spriteObject.x-=0.1
-            ch[sC(ch)].spriteObject.heading = "+"
-            ch[sC(ch)].spriteObject.direction = "East"
-            animator.addAnimation(ch[sC(ch)], ch[sC(ch)].spriteObject.animationSet['combat_walk'])
-
-    if p[pygame.K_a]:
-        if not ch[sC(ch)] is None:
-            ch[sC(ch)].spriteObject.x+=0.1
-            ch[sC(ch)].spriteObject.heading = "-"
-            ch[sC(ch)].spriteObject.direction = "West"
-            animator.addAnimation(ch[sC(ch)], ch[sC(ch)].spriteObject.animationSet['combat_walk'])
-
-    if p[pygame.K_w]:
-        if not ch[sC(ch)] is None:
-            ch[sC(ch)].spriteObject.z-=0.1
-            ch[sC(ch)].spriteObject.direction = "North"
-            animator.addAnimation(ch[sC(ch)], ch[sC(ch)].spriteObject.animationSet['combat_walk'])
-
-    if p[pygame.K_s]:
-        if not ch[sC(ch)] is None:
-            ch[sC(ch)].spriteObject.z+=0.1
-            ch[sC(ch)].spriteObject.direction = "South"
-            animator.addAnimation(ch[sC(ch)], ch[sC(ch)].spriteObject.animationSet['combat_walk'])
-
-    #print(ch[sC(ch)].spriteObject.x, ch[sC(ch)].spriteObject.y, ch[sC(ch)].spriteObject.z)
-    if p[pygame.K_q]:
-        cam.x+=1
-    if p[pygame.K_e]:
-        cam.x-=1
-    if p[pygame.K_z]:
-        cam.z -= 1
-    if p[pygame.K_c]:
-        cam.z += 1
-
-def mouseMove(e, cam, s):
-    x, y = e.rel
-    x /= s.get_width()
-    y /= s.get_height()
-
-    cam.xRot += x
-    cam.yRot += y
-
 
 
 ############################################################################
 ############################################################################
 
 #2D Controls
-
-pygame.joystick.init()
-joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
 keysPressed = {
     pyglet.window.key.A : False,
@@ -147,47 +90,7 @@ keysPressed = {
     pyglet.window.key.NUM_3 : False
 }
 
-# controls = {
-#     "player_1" : {
-#         "left" : pygame.K_a,
-#         "right" : pygame.K_d,
-#         "up" : pygame.K_w,
-#         "down" : pygame.K_s,
-#         "changeChr" : pygame.K_q,
-#         "ability1" : pygame.K_j,
-#         "ability2" : pygame.K_k,
-#         "ability3" : pygame.K_l,
-#         "ability4" : pygame.K_u,
-#     },
-#     "player_2" : {
-#         "left" : pygame.K_LEFT,
-#         "right" : pygame.K_RIGHT,
-#         "up" : pygame.K_UP,
-#         "down" : pygame.K_DOWN,
-#         "changeChr" : pygame.K_KP7,
-#         "ability1" : pygame.K_KP0,
-#         "ability2" : pygame.K_KP1,
-#         "ability3" : pygame.K_KP2,
-#         "ability4" : pygame.K_KP3,
-#     },
-#     "controller_1" : {
-#         "left" : (1,0),
-#         "right" : (-1,0),
-#         "up" : (0,1),
-#         "down" : (0,-1),
-#         "aleft" : [-1],
-#         "aright" : [1],
-#         "aup" : [1],
-#         "adown" : [-1],
-#         "changeChr" : pygame.K_y,
-#         "ability1" : pygame.K_x,
-#     },
-#         "cleft" : pygame.K_u,
-#         "cright" : pygame.K_i,
-#         "cup" : pygame.K_o,
-#         "cdown" : pygame.K_p,
-#         'blank' : (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-# }
+
 
 controls = {
     "player_1" : {
@@ -231,7 +134,9 @@ controls = {
         'blank' : (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 }
 
-def keyBinding_check(player):
+
+
+def keybinding_checker(player):
     try:
         controls[player]
     except:
@@ -239,118 +144,40 @@ def keyBinding_check(player):
     else:
         return controls[player]
 
+
+
 ############################################################################
 ############################################################################
 
-def controllerPress2D(ch, borders, cam, players, player):
 
-    joystick = joysticks[0]
-    joystick.init()
-
-    chr = players[player]['sC']
-
-    player_characters = []
-    for key in ch:
-        if ch[key].playerCharacter == True:
-            player_characters.append(ch[key])
-    change_sC(players, player, player_characters[0], ch)
-
-    if chr == None:
-        return False
-
-    key_map = controls['controller_1']
-
-    name = joystick.get_name()
-
-    axes = joystick.get_numaxes()
-
-    for i in range(axes):
-        axis = joystick.get_axis(i)
-        walkspeed = chr.stats.walkspeed * chr.stats.rate
-        if axis < -0.5 and i == 0:
-            animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-            action = action_manager.walkaction(
-                type='walk',
-                animation=chr.spriteObject.animationSet['combat_walk'],
-                frames=0,
-                priority=1,
-                direction='west',
-                walkspeed=walkspeed,
-                borders=borders,
-            )
-            action_manager.addAction(chr, action)
-        if axis > 0.5 and i == 0:
-            animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-            action = action_manager.walkaction(
-                type='walk',
-                animation=chr.spriteObject.animationSet['combat_walk'],
-                frames=0,
-                priority=1,
-                direction='east',
-                walkspeed=walkspeed,
-                borders=borders,
-            )
-            action_manager.addAction(chr, action)
-        if axis < -0.5 and i == 1:
-            animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-            action = action_manager.walkaction(
-                type='walk',
-                animation=chr.spriteObject.animationSet['combat_walk'],
-                frames=0,
-                priority=1,
-                direction='north',
-                walkspeed=walkspeed,
-                borders=borders,
-            )
-            action_manager.addAction(chr, action)
-        if axis > 0.5 and i == 1:
-            animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-            action = action_manager.walkaction(
-                type='walk',
-                animation=chr.spriteObject.animationSet['combat_walk'],
-                frames=0,
-                priority=1,
-                direction='south',
-                walkspeed=walkspeed,
-                borders=borders,
-            )
-            action_manager.addAction(chr, action)
-
-    buttons = joystick.get_numbuttons()
-
-    for i in range(buttons):
-        button = joystick.get_button(i)
-
-    hats = joystick.get_numhats()
-
-    for i in range(hats):
-        hat = joystick.get_hat(i)
 
 #For abilities that are tapped once
 def use_ability(p, keyBindings, chr, players, player, ability, cd):
     if not p[keyBindings['left']] and not p[keyBindings['right']] and not p[keyBindings['up']] and not p[keyBindings['down']]:
         for i, o in enumerate(chr.stats.previous_action):
-            if isinstance(o, action_manager.walkaction):
+            if isinstance(o, action_manager.walk_action):
                 del chr.stats.previous_action[i]
-    if p[keyBindings[ability]] and character_skills.checkHeldSkill(chr, ability)['type'] == False:
+    if p[keyBindings[ability]] and character_skills.check_held_skill(chr, ability)['type'] == False:
         animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
-        skill = character_skills.useSkill(chr, ability, players[player])
+        skill = character_skills.use_skill(chr, ability, players[player])
         if skill != False:
             players[player]['ability_cd'][cd] = skill[0]
     # if the ability is a held type ability
-    if p[keyBindings[ability]] and character_skills.checkHeldSkill(chr, ability)['type'] == True:
+    if p[keyBindings[ability]] and character_skills.check_held_skill(chr, ability)['type'] == True:
         if players[player]['abilities_held'][cd] == False:
             animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
             players[player]['abilities_held'][cd] = True
-            skill = character_skills.useSkill(chr, ability, players[player])
+            skill = character_skills.use_skill(chr, ability, players[player])
+
+
 
 #main control for 2d
-def keyPress2D(ch, borders, cam, players, player):
+def main_controls_2d(ch, borders, cam, players, player):
     #Return keys pressed
     p = keysPressed#pygame.key.get_pressed()
 
     chr = players[player]['sC']
-    keyBindings = keyBinding_check(players[player]['player'])
+    keyBindings = keybinding_checker(players[player]['player'])
 
     #cds
     ability_1_cd = players[player]['ability_cd']['1']
@@ -364,7 +191,7 @@ def keyPress2D(ch, borders, cam, players, player):
         walkspeed = chr.stats.walkspeed*chr.stats.rate
         if p[keyBindings['left']] == False and p[keyBindings['right']] == False and p[keyBindings['up']] == False and p[keyBindings['down']] == False and p[keyBindings['ability1']] == False and p[keyBindings['ability2']] == False:
             #Remove Walk Animations
-            action = action_manager.idleaction(
+            action = action_manager.idle_action(
                 type='idle',
                 animation=chr.spriteObject.animationSet['combat_idle'],
                 frames=0,
@@ -372,10 +199,10 @@ def keyPress2D(ch, borders, cam, players, player):
             )
             has_idle = False
             for test_action in chr.stats.queued_actions:
-                if isinstance(test_action, action_manager.idleaction):
+                if isinstance(test_action, action_manager.idle_action):
                     has_idle = True
             if has_idle == False:
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
             animator.addAnimation(chr, chr.spriteObject.animationSet['combat_idle'])
             animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
 
@@ -384,7 +211,7 @@ def keyPress2D(ch, borders, cam, players, player):
         if chr.stats.canMove == True:
             if p[keyBindings['left']] and p[keyBindings['up']] and not p[keyBindings['down']] and not p[keyBindings['right']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type = 'walk',
                     animation = chr.spriteObject.animationSet['combat_walk'],
                     frames = 0,
@@ -393,10 +220,10 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed = walkspeed,
                     borders = borders,
                 )
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
             if p[keyBindings['right']] and p[keyBindings['up']] and not p[keyBindings['down']] and not p[keyBindings['left']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type='walk',
                     animation=chr.spriteObject.animationSet['combat_walk'],
                     frames=0,
@@ -405,10 +232,10 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed=walkspeed,
                     borders=borders,
                 )
-                action_manager.addAction(chr,action)
+                action_manager.add_action(chr,action)
             if p[keyBindings['left']] and p[keyBindings['down']] and not p[keyBindings['up']] and not p[keyBindings['right']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type='walk',
                     animation=chr.spriteObject.animationSet['combat_walk'],
                     frames=0,
@@ -417,10 +244,10 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed=walkspeed,
                     borders=borders,
                 )
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
             if p[keyBindings['right']] and p[keyBindings['down']] and not p[keyBindings['up']] and not p[keyBindings['left']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type='walk',
                     animation=chr.spriteObject.animationSet['combat_walk'],
                     frames=0,
@@ -429,11 +256,11 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed=walkspeed,
                     borders=borders,
                 )
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
             if p[keyBindings['left']] and not p[keyBindings['down']] and not p[keyBindings['up']] and not p[
                     keyBindings['right']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type = 'walk',
                     animation = chr.spriteObject.animationSet['combat_walk'],
                     frames = 0,
@@ -442,11 +269,11 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed = walkspeed,
                     borders = borders,
                 )
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
             if p[keyBindings['right']] and not p[keyBindings['down']] and not p[keyBindings['up']] and not p[
                 keyBindings['left']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type='walk',
                     animation=chr.spriteObject.animationSet['combat_walk'],
                     frames=0,
@@ -455,11 +282,11 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed=walkspeed,
                     borders=borders,
                 )
-                action_manager.addAction(chr,action)
+                action_manager.add_action(chr,action)
             if p[keyBindings['up']] and not p[keyBindings['down']] and not p[keyBindings['left']] and not p[
                 keyBindings['right']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type='walk',
                     animation=chr.spriteObject.animationSet['combat_walk'],
                     frames=0,
@@ -468,11 +295,11 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed=walkspeed,
                     borders=borders,
                 )
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
             if p[keyBindings['down']] and not p[keyBindings['up']] and not p[keyBindings['left']] and not p[
                 keyBindings['right']]:
                 animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_recover'])
-                action = action_manager.walkaction(
+                action = action_manager.walk_action(
                     type='walk',
                     animation=chr.spriteObject.animationSet['combat_walk'],
                     frames=0,
@@ -481,7 +308,7 @@ def keyPress2D(ch, borders, cam, players, player):
                     walkspeed=walkspeed,
                     borders=borders,
                 )
-                action_manager.addAction(chr, action)
+                action_manager.add_action(chr, action)
 
         #Ability Key Bindings
         #Ability Cooldown worth testing if is better cooling down when the player can't move or not
@@ -490,26 +317,26 @@ def keyPress2D(ch, borders, cam, players, player):
             #ability 1
             if ability_1_cd == 0:
                 #if the ability is a tap type ability
-                if (character_skills.checkHeldSkill(chr, 'ability1')) != False:
+                if (character_skills.check_held_skill(chr, 'ability1')) != False:
                     use_ability(p, keyBindings, chr, players, player, 'ability1', '1')
             #else:
                 #players[player]['ability_cd']['1'] -= 1
             #ability_2
             if ability_2_cd == 0:
                 #if the ability is a tap type ability
-                if (character_skills.checkHeldSkill(chr, 'ability2')) != False:
+                if (character_skills.check_held_skill(chr, 'ability2')) != False:
                     use_ability(p, keyBindings, chr, players, player, 'ability2', '2')
             #else:
                 #players[player]['ability_cd']['2'] -= 1
             # ability_3
             if ability_3_cd == 0:
-                if (character_skills.checkHeldSkill(chr, 'ability3')) != False:
+                if (character_skills.check_held_skill(chr, 'ability3')) != False:
                     use_ability(p, keyBindings, chr, players, player, 'ability3', '3')
             #else:
                 #players[player]['ability_cd']['3'] -= 1
             # ability_4
             if ability_4_cd == 0:
-                if (character_skills.checkHeldSkill(chr, 'ability4')) != False:
+                if (character_skills.check_held_skill(chr, 'ability4')) != False:
                     use_ability(p, keyBindings, chr, players, player, 'ability4', '4')
             #else:
                 #players[player]['ability_cd']['4'] -= 1
@@ -525,7 +352,7 @@ def keyPress2D(ch, borders, cam, players, player):
             players[player]['ability_cd']['4'] -= 1
 
         #toggle held skills
-        if(character_skills.checkHeldSkill(chr, 'ability1')) != False and (character_skills.checkHeldSkill(chr, 'ability2')) != False and (character_skills.checkHeldSkill(chr, 'ability4')) != False and (character_skills.checkHeldSkill(chr, 'ability4')) != False:
+        if(character_skills.check_held_skill(chr, 'ability1')) != False and (character_skills.check_held_skill(chr, 'ability2')) != False and (character_skills.check_held_skill(chr, 'ability4')) != False and (character_skills.check_held_skill(chr, 'ability4')) != False:
             #check timers
             if players[player]['abilities_held']['1'] == True:
                 players[player]['abilities_held_timers']['1'] += 1
@@ -536,56 +363,56 @@ def keyPress2D(ch, borders, cam, players, player):
             if players[player]['abilities_held']['4'] == True:
                 players[player]['abilities_held_timers']['4'] += 1
             #check release
-            if not p[keyBindings['ability1']] and character_skills.checkHeldSkill(chr, 'ability1')['type'] == True:
+            if not p[keyBindings['ability1']] and character_skills.check_held_skill(chr, 'ability1')['type'] == True:
                 if players[player]['abilities_held']['1'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['1'] = False
-                    skill = character_skills.useSkill(chr, 'ability1', players[player])
+                    skill = character_skills.use_skill(chr, 'ability1', players[player])
                     players[player]['ability_cd']['1'] = skill[0]
-            if not p[keyBindings['ability2']] and character_skills.checkHeldSkill(chr, 'ability2')['type'] == True:
+            if not p[keyBindings['ability2']] and character_skills.check_held_skill(chr, 'ability2')['type'] == True:
                 if players[player]['abilities_held']['2'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['2'] = False
-                    skill = character_skills.useSkill(chr, 'ability2', players[player])
+                    skill = character_skills.use_skill(chr, 'ability2', players[player])
                     players[player]['ability_cd']['2'] = skill[0]
-            if not p[keyBindings['ability3']] and character_skills.checkHeldSkill(chr, 'ability3')['type'] == True:
+            if not p[keyBindings['ability3']] and character_skills.check_held_skill(chr, 'ability3')['type'] == True:
                 if players[player]['abilities_held']['3'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['3'] = False
-                    skill = character_skills.useSkill(chr, 'ability3', players[player])
+                    skill = character_skills.use_skill(chr, 'ability3', players[player])
                     players[player]['ability_cd']['3'] = skill[0]
-            if not p[keyBindings['ability4']] and character_skills.checkHeldSkill(chr, 'ability4')['type'] == True:
+            if not p[keyBindings['ability4']] and character_skills.check_held_skill(chr, 'ability4')['type'] == True:
                 if players[player]['abilities_held']['4'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['4'] = False
-                    skill = character_skills.useSkill(chr, 'ability4', players[player])
+                    skill = character_skills.use_skill(chr, 'ability4', players[player])
                     players[player]['ability_cd']['4'] = skill[0]
 
         #if you get knocked out while shielding or holding an ability down or if the character is not shielding but staggered
         if chr.stats.knockedOut == True or chr.stats.shielding != True and chr.stats.canMove == False:
-            if character_skills.checkHeldSkill(chr, 'ability1')['type'] == True:
+            if character_skills.check_held_skill(chr, 'ability1')['type'] == True:
                 if players[player]['abilities_held']['1'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['1'] = False
-                    skill = character_skills.useSkill(chr, 'ability1', players[player])
+                    skill = character_skills.use_skill(chr, 'ability1', players[player])
                     players[player]['ability_cd']['1'] = skill[0]
-            if character_skills.checkHeldSkill(chr, 'ability2')['type'] == True:
+            if character_skills.check_held_skill(chr, 'ability2')['type'] == True:
                 if players[player]['abilities_held']['2'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['2'] = False
-                    skill = character_skills.useSkill(chr, 'ability2', players[player])
+                    skill = character_skills.use_skill(chr, 'ability2', players[player])
                     players[player]['ability_cd']['2'] = skill[0]
-            if character_skills.checkHeldSkill(chr, 'ability3')['type'] == True:
+            if character_skills.check_held_skill(chr, 'ability3')['type'] == True:
                 if players[player]['abilities_held']['3'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['3'] = False
-                    skill = character_skills.useSkill(chr, 'ability3', players[player])
+                    skill = character_skills.use_skill(chr, 'ability3', players[player])
                     players[player]['ability_cd']['3'] = skill[0]
-            if character_skills.checkHeldSkill(chr, 'ability4')['type'] == True:
+            if character_skills.check_held_skill(chr, 'ability4')['type'] == True:
                 if players[player]['abilities_held']['4'] == True:
                     animator.removeAnimation(chr, chr.spriteObject.animationSet['combat_walk'])
                     players[player]['abilities_held']['4'] = False
-                    skill = character_skills.useSkill(chr, 'ability4', players[player])
+                    skill = character_skills.use_skill(chr, 'ability4', players[player])
                     players[player]['ability_cd']['4'] = skill[0]
 
     # Swap between characters temp
@@ -604,12 +431,12 @@ def keyPress2D(ch, borders, cam, players, player):
 
             for i in range(0, len(player_characters)):
                 if current_chr == None:
-                    change_sC(players, player, player_characters[0], ch)
+                    change_sc(players, player, player_characters[0], ch)
                 if player_characters[i] == current_chr and i != len(player_characters) - 1:
-                    change_sC(players, player, player_characters[i + 1], ch)
+                    change_sc(players, player, player_characters[i + 1], ch)
                     break
                 elif player_characters[i] == current_chr and i == len(player_characters) - 1:
-                    change_sC(players, player, player_characters[0], ch)
+                    change_sc(players, player, player_characters[0], ch)
                     break
     else:
         players[player]['ability_cd']['chr_swap'] -= 1

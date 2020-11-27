@@ -6,27 +6,32 @@
 #action manager
 #This script queues actions into characters and executes actions
 
-import pygame
 
-import Game_Scripts.animator, Game_Scripts.tileMap, Game_Scripts.functions, Game_Scripts.attackMapper, Game_Scripts.basic_game_mechanics, math
+
+import Game_Scripts.animator,\
+    Game_Scripts.tileMap,\
+    Game_Scripts.functions,\
+    Game_Scripts.attack_mapper,\
+    Game_Scripts.basic_game_mechanics,\
+    math
 
 animator = Game_Scripts.animator
 tile_map = Game_Scripts.tileMap
 functions = Game_Scripts.functions
-attackMapper = Game_Scripts.attackMapper
+attack_mapper = Game_Scripts.attack_mapper
 basic_game_mechanics = Game_Scripts.basic_game_mechanics
 
 
 ############################################################################
 ############################################################################
 
-'''
-actions
 
-each action has it's own class and variables
+#actions
 
-'''
-class idleaction():
+#each action has it's own class and variables
+
+
+class idle_action():
     def __init__(self, type, animation, frames, priority):
         self.type = type
         self.animation = animation
@@ -34,7 +39,7 @@ class idleaction():
         self.current_frame = 1
         self.priority = priority
 
-class walkaction():
+class walk_action():
     def __init__(self, type, animation, frames, priority, direction, walkspeed, borders):
         self.type = type
         self.animation = animation
@@ -45,7 +50,7 @@ class walkaction():
         self.walkspeed = walkspeed
         self.borders = borders
 
-class dashaction():
+class dash_action():
     def __init__(self, type, animation, frames, priority, direction, speed, moveFrames):
         self.type = type
         self.animation = animation
@@ -56,8 +61,8 @@ class dashaction():
         self.speed = speed
         self.moveFrames = moveFrames
 
-class meleeaction():
-    def __init__(self, type, animation, frames, priority, hitframe, initiator, damage, momentum, ticks, attackMap, knockback, moveframe,shieldBreaker):
+class melee_action():
+    def __init__(self, type, animation, frames, priority, hitframe, initiator, damage, momentum, ticks, attack_map, knockback, moveframe, shieldBreaker):
         self.type = type
         self.animation = animation
         self.frames = frames
@@ -69,7 +74,7 @@ class meleeaction():
         self.damage = damage
         self.momentum = momentum
         self.ticks = ticks
-        self.attackMap = attackMap
+        self.attack_map = attack_map
         self.knockback = knockback
         self.shieldBreaker = shieldBreaker
 
@@ -78,11 +83,13 @@ class meleeaction():
 
 
 #Add action to list
-def addAction(chr, action):
+def add_action(chr, action):
 
     #Chr exists
     if not chr is None:
         chr.stats.queued_actions.append(action)
+
+
 
 #execute actions
 def action_player(action, chr, ch):
@@ -167,10 +174,10 @@ def action_player(action, chr, ch):
                         spr.heading = "-"
                         spr.direction = "west"
                     elif action.direction == 'north':
-                        chr.stats.momentum  = (chr.stats.momentum[0], chr.stats.momentum[1]+speed)
+                        chr.stats.momentum  = (chr.stats.momentum[0], chr.stats.momentum[1]-speed)
                         spr.direction = "north"
                     elif action.direction == 'south':
-                        chr.stats.momentum  = (chr.stats.momentum[0], chr.stats.momentum[1]-speed)
+                        chr.stats.momentum  = (chr.stats.momentum[0], chr.stats.momentum[1]+speed)
                         spr.direction = "south"
                     elif action.direction == 'northwest':
                         chr.stats.momentum  = (chr.stats.momentum[0]+speed/math.sqrt(2), chr.stats.momentum[1]+speed/math.sqrt(2))
@@ -205,7 +212,7 @@ def action_player(action, chr, ch):
                     animator.addAnimation(chr, action.animation)
                 if action.current_frame == hitframe:
                     if spr.heading == '-':
-                        hitTiles = attackMapper.returnTilesHit(chr, action.attackMap)
+                        hitTiles = attack_mapper.returnTilesHit(chr, action.attack_map)
                         #create tiles
                         atk = tile_map.attack(
                             initiator=chr,
@@ -215,9 +222,9 @@ def action_player(action, chr, ch):
                             breakShields=action.shieldBreaker,
                         )
                         for hitTile in hitTiles:
-                            tile_map.createTileEffect(atk, hitTile)
+                            tile_map.create_tile_effect(atk, hitTile)
                     elif spr.heading == '+':
-                        hitTiles = attackMapper.returnTilesHit(chr, action.attackMap)
+                        hitTiles = attack_mapper.returnTilesHit(chr, action.attack_map)
                         # create tiles
                         atk = tile_map.attack(
                             initiator=chr,
@@ -227,7 +234,7 @@ def action_player(action, chr, ch):
                             breakShields = action.shieldBreaker,
                         )
                         for hitTile in hitTiles:
-                            tile_map.createTileEffect(atk, hitTile)
+                            tile_map.create_tile_effect(atk, hitTile)
                 if action.current_frame in moveframe:
                     if spr.heading == '-':
                         chr.stats.momentum = (chr.stats.momentum[0] + forward_momentum, chr.stats.momentum[1])

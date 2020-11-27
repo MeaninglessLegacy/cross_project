@@ -2,16 +2,22 @@
 ############################################################################
 
 
+
 #Camera purpose is to keep camera centered on subjects
 
-import math, Game_Scripts.functions
+import math,\
+    Game_Scripts.functions
 
 functions = Game_Scripts.functions
 
 cam_to_pos = None
 
+
+
 ############################################################################
 ############################################################################
+
+
 
 def tween_camera(cam, new_position):
 
@@ -28,6 +34,8 @@ def tween_camera(cam, new_position):
             cam.y += y_dist/10
         if math.fabs(z_dist) > 0.5:
             cam.z += z_dist/10
+
+
 
 def determine_camera_position(characters, cam):
 
@@ -54,7 +62,7 @@ def determine_camera_position(characters, cam):
             self_distances.append(math.sqrt(x * x + y * y ))
             chrs.append(characters[other_chr])
 
-        sorted_distances = functions.copyArray(self_distances)
+        sorted_distances = functions.copy_array(self_distances)
         sorted_distances.sort()
         sorted_distances.reverse()
 

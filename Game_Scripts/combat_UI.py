@@ -3,15 +3,21 @@
 
 #Combat_UI
 
-import pygame, math, pyglet
+import pygame,\
+    math,\
+    pyglet
 
 from pygame import font
 
-import Game_Scripts.controls, Game_Scripts.ui_assets, Game_Scripts.functions
+import Game_Scripts.controls,\
+    Game_Scripts.ui_assets,\
+    Game_Scripts.functions
 
 functions = Game_Scripts.functions
 controls = Game_Scripts.controls
 ui_assets = Game_Scripts.ui_assets
+
+
 
 ############################################################################
 ############################################################################
@@ -20,10 +26,14 @@ font_cache = {}
 
 ui_cache = {}
 
+
+
 ############################################################################
 ############################################################################
+
 #Draw the health bar of the selected character
-def drawHealthBar(UI_surface, w, h, ch):
+
+def draw_health_bar(UI_surface, w, h, ch):
 
     #Size of Health Bar
     sizeX = math.floor(w*0.45)
@@ -65,8 +75,10 @@ def drawHealthBar(UI_surface, w, h, ch):
     UI_surface.blit(text_Surface, text_rect)
 
 
+
 #the ui along the bottom
-def drawCharacterBoxs(primaryScreen, UI_surface, w, h, ch, players):
+
+def draw_character_boxes(primaryScreen, UI_surface, w, h, ch, players):
     #character boxes along the bottom
     #top half is character image/portrait sprite
 
@@ -111,19 +123,19 @@ def drawCharacterBoxs(primaryScreen, UI_surface, w, h, ch, players):
         # first thing we need to do is draw the character portrait
         ui_chr = player_characters[chr]
         #the entire background will be the portrait we will draw ontop of it
-        ui_portrait = ui_assets.returnAsset(ui_chr.stats.chrClass)["portrait"]
+        ui_portrait = ui_assets.return_asset(ui_chr.stats.chrClass)["portrait"]
         #we have a portrait
         if not ui_portrait is None:
             #Return the asset in image
             key = ui_portrait["image"]
             asset = functions.get_image(key, True)
             #asset = pygame.transform.scale(asset, (math.floor(char_guiX*w), math.floor(char_guiY*h)))
-            asset = functions.get_scaled_image(asset,ui_portrait["image"],(math.floor(char_guiX*w), math.floor(char_guiY*h)))
+            asset = functions.get_image(ui_portrait["image"], True)
             gui_main.blit(asset, (0, 0))
 
         #now that the portrait is drawn if it is selected draw selected box
         if ui_chr.isSelected == True:
-            ui_selected = ui_assets.returnAsset("universal")["portrait_select"]
+            ui_selected = ui_assets.return_asset("universal")["portrait_select"]
             asset = functions.get_image(ui_selected["image"], True)
             asset = pygame.transform.scale(asset, (math.floor(char_guiX * w), math.floor(char_guiY * h)))
             #asset = functions.get_scaled_image(asset, ui_selected["image"], (math.floor(char_guiX * w), math.floor(char_guiY * h)))
@@ -150,7 +162,7 @@ def drawCharacterBoxs(primaryScreen, UI_surface, w, h, ch, players):
         hpBarX=math.floor(stat_displaysX)
         hpBarY=math.floor(stat_displaysY*0.3)
         hp_bar = pygame.Surface((hpBarX,hpBarY), pygame.SRCALPHA)
-        drawHealthBar(hp_bar, hpBarX, hpBarY, ui_chr)
+        draw_health_bar(hp_bar, hpBarX, hpBarY, ui_chr)
         #primaryScreen.blit(hp_bar, (ui_chr.spriteObject.spriteBox.rect.midbottom))
         stat_displays.blit(hp_bar, (0, stat_displaysY-hpBarY-stat_displaysY*0.1))
 
@@ -176,17 +188,25 @@ def drawCharacterBoxs(primaryScreen, UI_surface, w, h, ch, players):
     #blit entire gui onto screen
     primaryScreen.blit(UI_surface, (0, 0))
 
+
+
 ############################################################################
 ############################################################################
+
+
 
 start_trigger = False
 duration_frames = 0
 trigger_frames = 0
 
+
+
 ############################################################################
 ############################################################################
 
-def battle_Start_Animation(primaryScreen, UI_surface, text, w, h):
+
+
+def battle_start_animation(primaryScreen, UI_surface, text, w, h):
 
     global start_trigger, trigger_frames, duration_frames
 
@@ -287,20 +307,25 @@ def battle_Start_Animation(primaryScreen, UI_surface, text, w, h):
         start_trigger = False
 
 
+
 #Battle start
-def battle_Start_Trigger(duration):
+def battle_start_trigger(duration):
     global start_trigger, trigger_frames, duration_frames
     duration_frames = duration
     trigger_frames = duration
     start_trigger = True
 
+
+
 ############################################################################
 ############################################################################
+
+
 
 blankSurface = None
 
 #Main function
-def draw_combat_UI(primaryScreen, UI_surface, w, h, ch, players, teams):
+def draw_combat_ui(primaryScreen, UI_surface, w, h, ch, players, teams):
 
     global start_trigger, c_Text, c_text_cache
 
@@ -310,8 +335,7 @@ def draw_combat_UI(primaryScreen, UI_surface, w, h, ch, players, teams):
     elif UI_surface is not blankSurface:
         UI_surface = pygame.Surface((w, h), pygame.SRCALPHA)'''
     #draw Ui
-    drawCharacterBoxs(primaryScreen, UI_surface, w, h, ch, players)
-
+    draw_character_boxes(primaryScreen, UI_surface, w, h, ch, players)
 
 
 

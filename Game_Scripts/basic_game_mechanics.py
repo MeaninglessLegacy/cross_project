@@ -3,7 +3,9 @@
 
 #Basic Game Mechanics
 
-import Game_Scripts.animator, math, Game_Scripts.functions, random
+import Game_Scripts.animator,\
+    math, Game_Scripts.functions,\
+    random
 
 functions = Game_Scripts.functions
 animator = Game_Scripts.animator
@@ -11,6 +13,8 @@ animator = Game_Scripts.animator
 
 ############################################################################
 ############################################################################
+
+#find a better way to do this, this is stupid
 
 block_sounds = [
     'Sound_Assets/block_1.wav',
@@ -22,12 +26,13 @@ block_sounds = [
 ############################################################################
 
 #Movement
-def moveChr(ch):
+
+def move_chr(ch):
     #get momementum
     spr_momentum = ch.stats.momentum
     spr = ch.spriteObject
     #get borders
-    border = functions.get_Borders()
+    border = functions.get_borders()
     #if we have borders
     if border != [] and spr_momentum != (0,0):
 
@@ -86,8 +91,11 @@ def moveChr(ch):
 
         ch.stats.momentum = (spr_momentum[0]-xMomentum, spr_momentum[1] - yMomentum)
 
+
+
 #Damage target
-def damageTarget(initiator, target, attack):
+
+def damage_target(initiator, target, attack):
 
     #Attack Stats
     damage = attack.damage
@@ -194,8 +202,11 @@ def damageTarget(initiator, target, attack):
             else:
                 tarStats.stunTimer = math.ceil(knockbackStrength*2.7)/4
 
+
+
 #Stuns
-def manageStun(ch):
+
+def manage_stun(ch):
     #character
     chr = ch
     stats = chr.stats
@@ -240,10 +251,13 @@ def manageStun(ch):
                 stats.previous_action = []
 
 
+
 ############################################################################
 ############################################################################
 
-def invincibleFrames(chr):
+
+
+def invincible_frames(chr):
 
     stats = chr.stats
 
@@ -257,13 +271,15 @@ def invincibleFrames(chr):
         stats.invincible = False
 
 
+
 ############################################################################
 ############################################################################
 
 #update all the basic mechanics
-def updateBasicMechanics(ch):
+
+def update_basic_mechanics(ch):
     for key in ch:
-        moveChr(ch[key])
-        invincibleFrames(ch[key])
-        manageStun(ch[key])
+        move_chr(ch[key])
+        invincible_frames(ch[key])
+        manage_stun(ch[key])
     pass

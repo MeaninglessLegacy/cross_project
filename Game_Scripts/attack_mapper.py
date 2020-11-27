@@ -2,7 +2,7 @@
 ############################################################################
 
 #class to help generate a map of which tiles to hit
-class attackMap():
+class attack_map():
     def __init__(self, center, forward, backwards, up, down, up_forward, up_backwards, down_forward, down_backwards):
         self.center = center
         self.forward = forward
@@ -28,11 +28,13 @@ def Remove(duplicate):
 
 #Return tiles in map
 
+
+
 def returnTilesHit(chr, map):
 
     #check if we were passed a map
 
-    if isinstance(map, attackMap) == True:
+    if isinstance(map, attack_map) == True:
 
         #chr position
         chr_pos = chr.stats.current_Tile

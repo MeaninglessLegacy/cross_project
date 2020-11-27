@@ -20,7 +20,8 @@ assets = {
     }
 }
 
-def returnAsset(asset):
+
+def return_asset(asset):
     # check if asset exists
     if not asset in assets:
         # This makes sure even if we can't find the file it does not crash the engine.

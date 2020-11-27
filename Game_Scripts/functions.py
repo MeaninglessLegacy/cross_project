@@ -1,7 +1,11 @@
 ############################################################################
 ############################################################################
 
-import threading, pygame, math, time, pyglet
+import threading,\
+    pygame,\
+    math,\
+    time,\
+    pyglet
 
 #Loaded Images
 image_cache = {}
@@ -15,8 +19,7 @@ sound_cache = {}
 #global borders
 borders = []
 
-#image scaling threshold
-#threshold = 100
+
 
 ############################################################################
 ############################################################################
@@ -32,16 +35,19 @@ class loadThread(threading.Thread):
     def run(self):
         start_time = time.time()
         print("Starting " + self.name + " " + str(time.ctime(start_time)))
-        preloadAnimationSet(self.load)
-        preloadStage(self.stage)
+        preload_animation_set(self.load)
+        preload_stage(self.stage)
         self.loaded = True
         print("Exiting " + self.name + " " + str(time.ctime(time.time())) + " Time taken " + str(time.time()-start_time))
+
+
 
 ############################################################################
 ############################################################################
 
 #copies and returns an array
-def copyArray(input):
+
+def copy_array(input):
     returnArray = []
 
     for i in range(0, len(input)):
@@ -49,35 +55,7 @@ def copyArray(input):
 
     return returnArray
 
-def roundNear(x, base):
-    return base * round(x/base)
 
-#get scaled images, bascially what we need to do to not kill ram but keep it smooth is to find sizes around this things range and delete those not within this range
-def get_scaled_image(image, url, size, threshold):
-    global scaled_image_cache
-    #Fall back
-    this_size = (1,1)
-    this_size = (roundNear(size[0],threshold), roundNear(size[1],threshold))
-    #make the key value of the image
-    key = url + str(this_size[0]) + str(this_size[1])
-    rangeUrls = []
-    deleteUrls = []
-    #keeps 10 items range
-    for i in range(-5,5):
-        for z in range(-5,5):
-            new_url = url + str(this_size[0]+threshold*z) + str(this_size[1]+threshold*i)
-            rangeUrls.append(new_url)
-    for old_key in scaled_image_cache:
-        if not old_key in rangeUrls:
-            deleteUrls.append(old_key)
-    for rangeKey in rangeUrls:
-        scaled_image_cache.pop(rangeKey, None)
-    if not key in scaled_image_cache:
-        texture = image.get_texture()
-        texture.width = image
-        texture.height = image
-        scaled_image_cache[key] = image
-    return scaled_image_cache[key]
 
 #Checking if image is loaded and loading images that need to be loaded
 def get_image(key, save_alpha):
@@ -95,14 +73,18 @@ def get_image(key, save_alpha):
     #return the image in cache
     return image_cache[key]
 
+
+
 #clear loaded images
-def clearCaches():
+def clear_caches():
 
     global image_cache
     global sound_cache
 
     image_cache = {}
     sound_cache = {}
+
+
 
 #update global borders
 def updateBorders(newBorders):
@@ -111,10 +93,14 @@ def updateBorders(newBorders):
 
     borders = newBorders
 
+
+
 #return borders
-def get_Borders():
+def get_borders():
 
     return  borders
+
+
 
 #Checking if sound is loaded and loading sound that need to be loaded
 def get_sound(key):
@@ -129,13 +115,15 @@ def get_sound(key):
     #return the image in cache
     return sound_cache[key]
 
+
+
 ############################################################################
 ############################################################################
 
 #3D Functions
 
 #rotatees a point
-def rotatePoint(x, y, theta):
+def rotate_point(x, y, theta):
     si = math.sin(theta)
     co = math.cos(theta)
 
@@ -152,16 +140,18 @@ def rotatePoint(x, y, theta):
 
     return [x,y]
 
+
+
 #Description: Distorts a singular point. Useful for drawing images
-def distortPoint(x,y,z, cam, s, w, h):
+def distort_point(x,y,z, cam, s, w, h):
     x -= cam.x
     y -= cam.y
     z -= cam.z
 
-    xzR = rotatePoint(x, z, cam.xRot)
+    xzR = rotate_point(x, z, cam.xRot)
     x = xzR[0]
     z = xzR[1]
-    yzR = rotatePoint(y, z, cam.yRot)
+    yzR = rotate_point(y, z, cam.yRot)
     y = yzR[0]
     z = yzR[1]
 
@@ -217,8 +207,10 @@ def preload(animations):
                         for sound in animations[i]['sounds']:
                             get_sound(animations[i]['sounds'][sound]['source'])
 
+
+
 # preloader feed this a set of animations eg animations.animations['tank']
-def preloadAnimationSet(animation_set):
+def preload_animation_set(animation_set):
     for key in animation_set:
         for o in range(0, len(animation_set[key]["frames"])):
             if not animation_set[key]["frames"][o] in image_cache:
@@ -236,6 +228,8 @@ def preloadAnimationSet(animation_set):
                             get_sound(animation_set[key]['sounds'][sound]['source'])
                             #print(str("loaded" + animation_set[key]['sounds'][sound]['source']))
 
+
+
 def try_file(file):
     try:
         fh = open(file, 'r')
@@ -245,7 +239,9 @@ def try_file(file):
     else:
         return True
 
-def preloadStage(stage):
+
+
+def preload_stage(stage):
     if stage['background']['img'] != None:
         if try_file(stage['background']['img']) == True:
             get_image(stage['background']['img'], False)
@@ -266,5 +262,38 @@ def preloadStage(stage):
             pygame.mixer.music.load(stage['bgm']['source'])
 
 
+
 ############################################################################
 ############################################################################
+
+# def round_near(x, base):
+#     return base * round(x/base)
+# 
+# 
+# 
+# #get scaled images, bascially what we need to do to not kill ram but keep it smooth is to find sizes around this things range and delete those not within this range
+# def get_scaled_image(image, url, size, threshold):
+#     global scaled_image_cache
+#     #Fall back
+#     this_size = (1,1)
+#     this_size = (round_near(size[0],threshold), round_near(size[1],threshold))
+#     #make the key value of the image
+#     key = url + str(this_size[0]) + str(this_size[1])
+#     rangeUrls = []
+#     deleteUrls = []
+#     #keeps 10 items range
+#     for i in range(-5,5):
+#         for z in range(-5,5):
+#             new_url = url + str(this_size[0]+threshold*z) + str(this_size[1]+threshold*i)
+#             rangeUrls.append(new_url)
+#     for old_key in scaled_image_cache:
+#         if not old_key in rangeUrls:
+#             deleteUrls.append(old_key)
+#     for rangeKey in rangeUrls:
+#         scaled_image_cache.pop(rangeKey, None)
+#     if not key in scaled_image_cache:
+#         texture = image.get_texture()
+#         texture.width = image
+#         texture.height = image
+#         scaled_image_cache[key] = image
+#     return scaled_image_cache[key]

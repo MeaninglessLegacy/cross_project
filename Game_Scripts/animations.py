@@ -381,6 +381,8 @@ animations = {
     }
 }
 
+
+
 def returnAnimation(animationSet):
     # check if animations exists
     if not animationSet in animations:
@@ -389,6 +391,8 @@ def returnAnimation(animationSet):
         return(False)
     # return the image in cache
     return animations[animationSet]
+
+
 
 def update_fps(new_fps):
 
