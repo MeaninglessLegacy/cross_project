@@ -1,25 +1,26 @@
-############################################################################
-############################################################################
-
-
+########################################################################################################################
+########################################################################################################################
 
 #Camera purpose is to keep camera centered on subjects
 
-import math,\
-    Game_Scripts.functions
+import math
 
-functions = Game_Scripts.functions
+from Game_Scripts import functions
 
 cam_to_pos = None
 
 
 
-############################################################################
-############################################################################
-
-
+########################################################################################################################
+########################################################################################################################
 
 def tween_camera(cam, new_position):
+    """
+    moves a camera more smoothly between two points - THIS SOLUTION SUCKS NEEDS TO BE FIXED
+    :param cam: the camera object to tween
+    :param new_position: the new position for the camera object
+    :return:
+    """
 
     x_dist = new_position[0] - cam.x
     y_dist = new_position[1] - cam.y
@@ -38,6 +39,13 @@ def tween_camera(cam, new_position):
 
 
 def determine_camera_position(characters, cam):
+    """
+    using all the characters on the stage, this determines the position the camera needs to be in to be able to view
+    all the characters at once
+    :param characters: the list of all characters objects, class is defined in characters_and_sprites.py
+    :param cam: the camera object to calculate the position for
+    :return:
+    """
 
     global cam_to_pos, cam_old_pos
 

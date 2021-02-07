@@ -1,45 +1,43 @@
 ############################################################################
 ############################################################################
 
-fps = 60
-
-#dictionary of animations
-#dictionary key for animation = animation set
-#.ie "tank" = tank animations
-#delay is how many frames pass before next animation is played
-#animations with higher priority get played over those with lower
+# dictionary of animations
+# dictionary key for animation = animation set
+# .ie "tank" = tank animations
+# delay is how many frames pass before next animation is played
+# animations with higher priority get played over those with lower
 animations = {
     "tank" : {
 
 
 
-        #Priority List:
+        # Priority List:
         
-        #combat_idle : 0
-        #combat_walk : 1
-        #combat_basic_attack_1 : 4
-        #combat_basic_attack_2 : 4
-        #combat_basic_attack_3 : 4
-        #combat_basic_attack_4 : 4
-        #combat_basic_dash_attack : 4
-        #combat_heavy_charge : 4
-        #combat_heavy_charged_0 : 4
-        #combat_heavy_hit_0 : 4
-        #combat_stagger : 5
-        #combat_shield : 6
-        #combat_knocked_out : 7
-        #combat_recover : 8
-        #combat_knocked_down : 9
+        # combat_idle : 0
+        # combat_walk : 1
+        # combat_basic_attack_1 : 4
+        # combat_basic_attack_2 : 4
+        # combat_basic_attack_3 : 4
+        # combat_basic_attack_4 : 4
+        # combat_basic_dash_attack : 4
+        # combat_heavy_charge : 4
+        # combat_heavy_charged_0 : 4
+        # combat_heavy_hit_0 : 4
+        # combat_stagger : 5
+        # ombat_shield : 6
+        # combat_knocked_out : 7
+        # combat_recover : 8
+        # combat_knocked_down : 9
 
 
 
-        #Walk animation
+        # Walk animation
         
         "combat_walk" : {
             "animation_priority" : 1,
             "name" : 'combat_walk',
             "looped" : False,
-            "delay" : fps/24,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Walk/0-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Walk/0-1.png",
@@ -51,13 +49,13 @@ animations = {
             },
         },
 
-        #Basic Attack Animations
+        # Basic Attack Animations
 
         "combat_basic_attack_1" : {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/30,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/0-0-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/0-0-1.png",
@@ -84,7 +82,7 @@ animations = {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/1-1-1.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/1-1-2.png",
@@ -108,7 +106,7 @@ animations = {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/3-3-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/3-3-1.png",
@@ -132,7 +130,7 @@ animations = {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/4-00.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/4-0.png",
@@ -156,13 +154,13 @@ animations = {
             },
         },
 
-        #Dash Attack Animation
+        # Dash Attack Animation
 
         "combat_basic_attack_dash" : {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/2-2-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Basic/2-2-1.png",
@@ -185,13 +183,13 @@ animations = {
             },
         },
 
-        #Charged Attack Animations
+        # Charged Attack Animations
 
         "combat_heavy_charge" : {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/0-1.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/0-2.png",
@@ -206,7 +204,7 @@ animations = {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : True,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/1-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/1-1.png",
@@ -218,7 +216,7 @@ animations = {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/2-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/2-1.png",
@@ -238,7 +236,7 @@ animations = {
             "animation_priority" : 4,
             "name" : 'meleeAtk',
             "looped" : False,
-            "delay" : fps/15,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/2-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Heavy/3-0.png",
@@ -255,13 +253,13 @@ animations = {
             },
         },
 
-        #Rolling Animation
+        # Rolling Animation
 
         "combat_roll" : {
             "animation_priority" : 4,
             "name" : 'dash',
             "looped" : False,
-            "delay" : fps/fps,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Roll/0-1.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Roll/0-2.png",
@@ -277,13 +275,13 @@ animations = {
             },
         },
 
-        #Shielding Animation
+        # Shielding Animation
 
         "combat_shield" : {
             "animation_priority" : 6,
             "name" : 'shield',
             "looped" : True,
-            "delay" : fps/fps,
+            "delay" : 1,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Shield/1.png",
             ],
@@ -291,13 +289,13 @@ animations = {
             },
         },
 
-        #Hit Animations
+        # Hit Animations
 
         "combat_stagger" : {
             "animation_priority": 5,
             "name" : 'stagger',
             "looped" : False,
-            "delay" : fps/fps,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Stagger/0-0.png",
             ],
@@ -308,7 +306,7 @@ animations = {
             "animation_priority": 9,
             "name" : 'knockedDown',
             "looped" : False,
-            "delay" : fps/24,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Knock_Down/0-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Knock_Down/0-1.png",
@@ -336,7 +334,7 @@ animations = {
             "animation_priority": 7,
             "name" : 'knockedOut',
             "looped" : True,
-            "delay" : fps/fps,
+            "delay" : 1,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Knock_Down/0-7.png",
             ],
@@ -347,7 +345,7 @@ animations = {
             "animation_priority": 8,
             "name" : 'recover',
             "looped" : False,
-            "delay" : fps/24,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Recovery/0-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Recovery/0-1.png",
@@ -360,13 +358,13 @@ animations = {
             },
         },
 
-        #Idle Animation
+        # Idle Animation
 
         "combat_idle" : {
             "animation_priority": 0,
             "name" : 'idle',
             "looped" : True,
-            "delay" : fps/24,
+            "delay" : 2,
             "frames" : [
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Idle/0-0.png",
                 "Sprite_Assets/Sprites/Tank_Sprites/Combat_Idle/0-1.png",
@@ -393,12 +391,6 @@ def returnAnimation(animationSet):
     return animations[animationSet]
 
 
-
-def update_fps(new_fps):
-
-    global fps
-
-    fps = new_fps
 
 ############################################################################
 ############################################################################

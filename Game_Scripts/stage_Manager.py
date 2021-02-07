@@ -1,24 +1,13 @@
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
-#Stage Manager set stage backgrounds, music etc.
+# Stage Manager set stage backgrounds, music etc.
+import pygame
 
-import pygame,\
-    math,\
-    Game_Scripts.stages,\
-    Game_Scripts.functions
+from Game_Scripts import functions
 
-
-functions = Game_Scripts.functions
-
-stages = Game_Scripts.stages
-
-
-
-############################################################################
-############################################################################
-
-
+########################################################################################################################
+########################################################################################################################
 
 stage_bgm = None
 
@@ -26,27 +15,41 @@ music_inc = 0
 
 
 
-############################################################################
-############################################################################
-
-
+########################################################################################################################
+########################################################################################################################
 
 def draw_background(background_img, screen, cam, w, h):
+    """
+    draws the background image - not in use
+    :param background_img:
+    :param screen:
+    :param cam:
+    :param w:
+    :param h:
+    :return:
+    """
     # Load the image
-    img = functions.get_image(background_img['img'], False)
+    img = functions.get_image(background_img['img'])
     img_pos = background_img['position']
     screen.blit(img, img_pos)
     # If a position is specified otherwise it is fixed
-    '''if img_pos != None:
-        xPos = cam.x*10 - img_pos[0]
-        yPos = cam.y - img_pos[1]
-        screen.blit(img, (xPos, 0))
-    else:
-        screen.blit(img, (0, 0))'''
+    # if img_pos != None:
+    #     xPos = cam.x*10 - img_pos[0]
+    #     yPos = cam.y - img_pos[1]
+    #     screen.blit(img, (xPos, 0))
+    # else:
+    #     screen.blit(img, (0, 0))
 
 
 
 def determine_regions(layer, cam, s):
+    """
+    finds out the size of the background, foreground and other stage elements - not in use
+    :param layer:
+    :param cam:
+    :param s:
+    :return:
+    """
 
     start_pos = layer['position']
     scale = layer['scale']
@@ -84,34 +87,44 @@ def determine_regions(layer, cam, s):
 
     if image != None:
 
-        image = functions.get_image(layer['img'], True)
+        image = functions.get_image(layer['img'])
 
         if space.width < 5000 or space.height < 5000:
 
             #image = pygame.transform.scale(image, (space.width, space.height))
-            image = functions.get_image(layer['img'], True)
+            image = functions.get_image(layer['img'])
 
         s.blit(image, space)
 
 
 
-#main function
+# main function
 def render_stage(stage, screen, cam, layer, w, h):
+    """
+    tries to render the current stage - not in use
+    :param stage:
+    :param screen:
+    :param cam:
+    :param layer:
+    :param w:
+    :param h:
+    :return:
+    """
 
     background_screen = screen
-    #Background
+    # Background
     if stage['background']['visible'] != False and layer == 2:
         draw_background(stage['background'], background_screen, cam, w, h)
-    #Mid ground
+    # Mid ground
     if stage['middle_ground']['visible'] != False and layer == 2:
         determine_regions(stage['middle_ground'], cam, screen)
-    #Floor- stage floor is special but it is behind yet still needs alpha
+    # Floor- stage floor is special but it is behind yet still needs alpha
     if stage['stage_floor']['visible'] != False and layer == 2:
         determine_regions(stage['stage_floor'], cam, screen)
-    #On Floor
+    # On Floor
     if stage['on_floor']['visible'] != False and layer == 1:
         determine_regions(stage['on_floor'], cam, screen) 
-    #Foreground
+    # Foreground
     if stage['foreground']['visible'] != False and layer == 1:
         determine_regions(stage['foreground'], cam, screen)
 
@@ -120,10 +133,16 @@ def render_stage(stage, screen, cam, layer, w, h):
 
 
 def music_stage(stage, level):
+    """
+    uses pygame to play music for each stage
+    :param stage: a stage object
+    :param level: an integer value that is either 0 or 1, depending on if music should fade in
+    :return:
+    """
 
     global stage_bgm, music_inc
 
-    #Background music
+    # Background music
     if stage['bgm']['source'] != None and level == 0:
         get_bgm = stage['bgm']['source']
         #if the stage bgm is not the current bgm
@@ -156,6 +175,11 @@ def music_stage(stage, level):
 
 
 def set_bgm(bgm):
+    """
+    sets the pygame.mixer with new music to play
+    :param bgm: a pygame.mixer sound object should be returned from the get_sound function in functions.py
+    :return:
+    """
 
     global stage_bgm
 

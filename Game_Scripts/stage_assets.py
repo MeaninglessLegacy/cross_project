@@ -1,13 +1,11 @@
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
-import Game_Scripts.tileMap
+from Game_Scripts import tile_system
 
-tileMapper = Game_Scripts.tileMap
-
-#dictionary of stages
-#dictionary key for assets
-#.ie "dusk_city_roof_1 = stage of dusk city roof
+# dictionary of stages
+# dictionary key for assets
+# .ie "dusk_city_roof_1 = stage of dusk city roof
 stages = {
     "bridge_1" : {
         "background": {
@@ -48,7 +46,7 @@ stages = {
             #"source" : 'Stage_Assets/bgm/NO_EX01.mp3',
         },
         "map" : {
-            'tile_set' : tileMapper.tile_set_2d(20,10,0,-2,-15,2),
+            'tile_set' : tile_system.tile_set_2d(20,10,0,-2,-15,2),
         },
         "spawns" : [
             (36,8),
@@ -95,7 +93,7 @@ stages = {
             #"source" : 'Stage_Assets/bgm/NO_EX01.mp3',
         },
         "map" : {
-            'tile_set' : tileMapper.tile_set_2d(40,1,0,-2,-15,2),
+            'tile_set' : tile_system.tile_set_2d(40,1,0,-2,-15,2),
         },
         "spawns" : [
             (36,0.5),
@@ -141,7 +139,7 @@ stages = {
             "source" : 'Stage_Assets/bgm/NO_EX01.mp3',
         },
         "map" : {
-            'tile_set' : tileMapper.tile_set_2d(40,3,0,0,-15,2),
+            'tile_set' : tile_system.tile_set_2d(40,3,0,0,-15,2),
         },
         "spawns" : [
             (36,0.5),
@@ -154,6 +152,11 @@ stages = {
 
 
 def return_asset(stage):
+    """
+    gives the layout of the stage when given a key value that exists
+    :param stage: a string that is the name of a stage in stage_assets.py
+    :return:
+    """
     # check if stage exists
     if not stage in stages:
         # This makes sure even if we can't find the file it does not crash the engine.
@@ -161,7 +164,3 @@ def return_asset(stage):
         return(False)
     # return the stage
     return stages[stage]
-
-
-############################################################################
-############################################################################

@@ -5,13 +5,11 @@
 #Tank Skills
 #Skills are called from control no need to call control from here
 
-import Game_Scripts.animator,\
-    Game_Scripts.actions_manager,\
-    math, Game_Scripts.attack_mapper
+import math
 
-animator = Game_Scripts.animator
-action_manager = Game_Scripts.actions_manager
-attack_mapper = Game_Scripts.attack_mapper
+from Game_Scripts import animator, actions_manager, attack_mapper
+
+
 
 ############################################################################
 ############################################################################
@@ -93,7 +91,7 @@ def ability1(chr, player):
     )
 
     #attack action here is changed if is dash attack
-    atk_action = action_manager.melee_action(
+    atk_action = actions_manager.melee_action(
         type='meleeAtk',
         animation=animation,
         # total amount of frames is delay frame of each frame * total number of frames
@@ -132,7 +130,7 @@ def ability1(chr, player):
                 down_forward=2,
                 down_backwards=2,
             )
-            atk_action = action_manager.melee_action(
+            atk_action = actions_manager.melee_action(
                 type='meleeAtk',
                 animation=animation,
                 # total amount of frames is delay frame of each frame * total number of frames
@@ -161,7 +159,7 @@ def ability1(chr, player):
     }
 
     #if previous action was a melee attack
-    if isinstance(pAction, action_manager.melee_action) == True:
+    if isinstance(pAction, actions_manager.melee_action) == True:
         #if previous action was one of the basic melee attacks
         if str(pAction.animation) in animations:
             if len(pAnimation) != 0:
@@ -205,7 +203,7 @@ def ability1(chr, player):
             elif key == 2:
                 animation = spr.animationSet['combat_basic_attack_4']
                 damage = chr.stats.atk * 1.1
-                knockback = 15000 * knB_mod #10000 of force
+                knockback = 7500 * knB_mod #5000N of force
                 cooldown = math.ceil(((animation['delay']+1)*math.fabs(1/chr.stats.rate))*(len(animation['frames'])))+14#+(math.fabs(1/chr.stats.rate)))
                 # different tiles hit
                 attack_map = attack_mapper.attack_map(
@@ -219,7 +217,7 @@ def ability1(chr, player):
                     down_forward=1,
                     down_backwards=1,
                 )
-                atk_action = action_manager.melee_action(
+                atk_action = actions_manager.melee_action(
                     type='meleeAtk',
                     animation=animation,
                     # total amount of frames is delay frame of each frame * total number of frames
@@ -241,7 +239,7 @@ def ability1(chr, player):
                 cooldown = math.ceil(((animation['delay']+1)*math.fabs(1/chr.stats.rate))*(len(animation['frames'])))-1
                 knockback = 250 * 1.5 * knB_mod #312.5N of force
                 damage = chr.stats.atk * 0.5
-                atk_action = action_manager.melee_action(
+                atk_action = actions_manager.melee_action(
                     type='meleeAtk',
                     animation=animation,
                     # total amount of frames is delay frame of each frame * total number of frames
@@ -259,7 +257,7 @@ def ability1(chr, player):
                 )
             # Remap attack
             if key != 2 and key != 3:
-                atk_action = action_manager.melee_action(
+                atk_action = actions_manager.melee_action(
                     type='meleeAtk',
                     animation=animation,
                     # total amount of frames is delay frame of each frame * total number of frames
@@ -295,7 +293,7 @@ def ability1(chr, player):
     if atkAction == False:
         action = atk_action
         #add action
-        action_manager.add_action(chr, action)
+        actions_manager.add_action(chr, action)
 
         return cooldown
     
@@ -322,11 +320,11 @@ def ability2(chr, player):
 
     exempt_actions = []
     for i, o in enumerate(chr.stats.queued_actions):
-        if not isinstance(o, action_manager.walk_action) and not isinstance(o, action_manager.idle_action):
+        if not isinstance(o, actions_manager.walk_action) and not isinstance(o, actions_manager.idle_action):
             exempt_actions.append(o)
 
     #toggle
-    if player['abilities_held']['2'] == True and exempt_actions == []:
+    if player.abilities_held['2'] == True and exempt_actions == []:
         spr.animationList = []
         stats = chr.stats
         stats.shield_strength = 0.90
@@ -335,7 +333,7 @@ def ability2(chr, player):
 
         animator.addAnimation(chr, spr.animationSet['combat_shield'])
 
-    elif player['abilities_held']['2'] == False:
+    elif player.abilities_held['2'] == False:
         # this chr's stats
         stats = chr.stats
         stats.shielding = False
@@ -345,7 +343,7 @@ def ability2(chr, player):
         animator.removeAnimation(chr, spr.animationSet['combat_shield'])
 
         #held timers
-        player['abilities_held_timers']['2'] = 0
+        player.abilities_held_timers['2'] = 0
 
 
     return 6 *math.fabs(1/chr.stats.rate)
@@ -381,7 +379,7 @@ def ability3(chr, player):
 
     invince_frames = math.ceil((animation['delay']+1) * math.fabs(1 / chr.stats.rate)) * len(animation['frames'])-8
 
-    dash_action = action_manager.dash_action(
+    dash_action = actions_manager.dash_action(
         type = "dash",
         animation = animation,
         frames = math.ceil((animation['delay']+1) * math.fabs(1 / chr.stats.rate)) * len(animation['frames']),
@@ -405,7 +403,7 @@ def ability3(chr, player):
     # No dash action then add dash
     if dashAction == False:
         # add action
-        action_manager.add_action(chr, dash_action)
+        actions_manager.add_action(chr, dash_action)
         #Add invinciblity frames
         stats.invincible_frames += invince_frames
         return cooldown
@@ -439,7 +437,7 @@ def ability4(chr, player):
 
     exempt_actions = []
     for i, o in enumerate(chr.stats.queued_actions):
-        if not isinstance(o, action_manager.walk_action) and not isinstance(o, action_manager.idle_action) and not isinstance(o, action_manager.melee_action):
+        if not isinstance(o, actions_manager.walk_action) and not isinstance(o, actions_manager.idle_action) and not isinstance(o, actions_manager.melee_action):
             exempt_actions.append(o)
 
     pAction = None
@@ -448,7 +446,7 @@ def ability4(chr, player):
         pAction = action[0]
 
     #charge
-    if player['abilities_held']['4'] == True and exempt_actions == []:
+    if player.abilities_held['4'] == True and exempt_actions == []:
 
         stats.channeling = True
         #check if skill still needs to be charged
@@ -457,21 +455,21 @@ def ability4(chr, player):
         animator.addAnimation(chr, spr.animationSet['combat_heavy_charged_0'])
 
     #strike
-    if player['abilities_held']['4'] == False:
+    if player.abilities_held['4'] == False:
 
         stats.channeling = False
         #remove charge animations
         animator.removeAnimation(chr, spr.animationSet['combat_heavy_charge'])
         animator.removeAnimation(chr, spr.animationSet['combat_heavy_charged_0'])
         #release charge
-        charge_modifier = (3*player['abilities_held_timers']['4']/48)
+        charge_modifier = (3*player.abilities_held_timers['4']/48)
 
         #attack based on time charged
         animation = spr.animationSet['combat_heavy_hit_0']
         #if charged more than 1 second do heavy hit
-        if player['abilities_held_timers']['4'] < 12:
+        if player.abilities_held_timers['4'] < 12:
             animation = spr.animationSet['combat_heavy_hit_1']
-        elif player['abilities_held_timers']['4'] > 48:
+        elif player.abilities_held_timers['4'] > 48:
             charge_modifier = 3
 
         #attack stats
@@ -490,7 +488,7 @@ def ability4(chr, player):
             down_forward=2,
             down_backwards=1,
         )
-        atk_action = action_manager.melee_action(
+        atk_action = actions_manager.melee_action(
             type='meleeAtk',
             animation=animation,
             # total amount of frames is delay frame of each frame * total number of frames
@@ -508,15 +506,15 @@ def ability4(chr, player):
         )
 
         #case shield break if > 24
-        if player['abilities_held_timers']['4'] >= 24:
+        if player.abilities_held_timers['4'] >= 24:
             atk_action.shieldBreaker = True
 
         #on release we need to stop charge
-        if isinstance(pAction, action_manager.melee_action) == False:
-            action_manager.add_action(chr, atk_action)
+        if isinstance(pAction, actions_manager.melee_action) == False:
+            actions_manager.add_action(chr, atk_action)
 
         #reset charge timer
-        player['abilities_held_timers']['4'] = 0
+        player.abilities_held_timers['4'] = 0
 
     return cooldown
 

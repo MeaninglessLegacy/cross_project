@@ -1,30 +1,24 @@
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
-import threading,\
-    pygame,\
-    math,\
-    time,\
-    pyglet
+import math
+import threading
+import time
+import pygame
 
-#Loaded Images
-image_cache = {}
+from global_variables import *
 
-#scaled image cache, this one is gonna take alot of ram omega oof
-scaled_image_cache = {}
+########################################################################################################################
+########################################################################################################################
 
-#loaded sounds
-sound_cache = {}
-
-#global borders
-borders = []
-
-
-
-############################################################################
-############################################################################
+#these things are stupid and needs to be fixed or removed
 
 class loadThread(threading.Thread):
+    """
+    the functions preload_animation_set and preload_stage, take all the files in the characters that need to be
+    displayed and loads them once to the caches, it does this on a separate thread
+    -this current causes the game to freeze whenever this thread is running
+    """
     def __init__(self, threadID, name, load, stage):
         threading.Thread.__init__(self)
         self.threadID = threadID
@@ -34,20 +28,18 @@ class loadThread(threading.Thread):
         self.loaded = False
     def run(self):
         start_time = time.time()
-        print("Starting " + self.name + " " + str(time.ctime(start_time)))
+        print("STARTING " + self.name + " " + str(time.ctime(start_time)))
         preload_animation_set(self.load)
         preload_stage(self.stage)
         self.loaded = True
-        print("Exiting " + self.name + " " + str(time.ctime(time.time())) + " Time taken " + str(time.time()-start_time))
-
-
-
-############################################################################
-############################################################################
-
-#copies and returns an array
+        print("EXITING " + self.name + " " + str(time.ctime(time.time())) + " TIME TAKEN " + str(time.time()-start_time))
 
 def copy_array(input):
+    """
+    copies and returns a new array - this is pointless and should be removed
+    :param input: old array that you want copied
+    :return:
+    """
     returnArray = []
 
     for i in range(0, len(input)):
@@ -56,54 +48,40 @@ def copy_array(input):
     return returnArray
 
 
+########################################################################################################################
+########################################################################################################################
 
-#Checking if image is loaded and loading images that need to be loaded
-def get_image(key, save_alpha):
-    #if loaded image is not in the cache then load the image once
+# IMAGE LOADING AND DELETING
+
+def get_image(key):
+    """
+    loads an image with pyglet and stores it in the image cache if it has not already been loaded. Once the image is
+    loaded or the image has been loaded before it returns the image
+    :param key: this is the url of the image and the key of the image in the cache
+    :return: returns the image from the cache
+    """
+    # if loaded image is not in the cache then load the image once
     if not key in image_cache:
-        # This makes sure even if we can't find the file it does not crash the engine.
+        # error handling
         try:
             fh = open(key, 'r')
         except FileNotFoundError:
-            print('missing sprite:'+key)
+            print('ERROR missing image:'+key)
             pass
         else:
-            #change back to .convert_alpha() later
             image_cache[key] = pyglet.image.load(key)
-    #return the image in cache
+    # return the image in cache
     return image_cache[key]
 
 
 
-#clear loaded images
-def clear_caches():
-
-    global image_cache
-    global sound_cache
-
-    image_cache = {}
-    sound_cache = {}
-
-
-
-#update global borders
-def updateBorders(newBorders):
-
-    global borders
-
-    borders = newBorders
-
-
-
-#return borders
-def get_borders():
-
-    return  borders
-
-
-
-#Checking if sound is loaded and loading sound that need to be loaded
 def get_sound(key):
+    """
+    check if a sound is loaded, less will loaded the sound with pygame and return the loaded sound for use
+    -phase out the use of pygame
+    :param key: the url of the sound file
+    :return: the sound object from pygame
+    """
     if not key in sound_cache:
         try:
             fh = open(key, 'r')
@@ -112,29 +90,40 @@ def get_sound(key):
             pass
         else:
             sound_cache[key] = pygame.mixer.Sound(key)
-    #return the image in cache
+    # return the image in cache
     return sound_cache[key]
 
 
 
-############################################################################
-############################################################################
+def clear_caches():
+    """
+    this function frees the space taken up by the caches and should be called whenever loading occurs
+    :return:
+    """
 
-#3D Functions
+    global image_cache, sound_cache
 
-#rotatees a point
+    image_cache.clear()
+    sound_cache.clear()
+
+########################################################################################################################
+########################################################################################################################
+
+# 3D Functions
+
+# rotatees a point
 def rotate_point(x, y, theta):
     si = math.sin(theta)
     co = math.cos(theta)
 
-    #0,1  - 1,0 +cos +sin
-    #1,0  -  0,-1 +cos -sin
-    #0,-1  -  -1,0 -cos -sin
-    #-1,0 - 0,1 -cos +sin
+    # 0,1  - 1,0 +cos +sin
+    # 1,0  -  0,-1 +cos -sin
+    # 0,-1  -  -1,0 -cos -sin
+    # -1,0 - 0,1 -cos +sin
 
-    #x = y*si + x*co
-    #y = y*co - x*si
-    #Reverse Because ccs,sin graph is counter clockwise invert sin
+    # x = y*si + x*co
+    # y = y*co - x*si
+    # Reverse Because ccs,sin graph is counter clockwise invert sin
     x = x*co-y*si
     y = y*co+x*si
 
@@ -142,8 +131,18 @@ def rotate_point(x, y, theta):
 
 
 
-#Description: Distorts a singular point. Useful for drawing images
 def distort_point(x,y,z, cam, s, w, h):
+    """
+        Distorts a singular point. Useful for drawing images
+        xr = cam.xRot
+        yr = cam.yRot
+
+        si = math.sin(xr)
+        co = math.cos(xr)
+
+        x = x * co - z * si
+        z = z * co - x * si
+    """
     x -= cam.x
     y -= cam.y
     z -= cam.z
@@ -154,17 +153,6 @@ def distort_point(x,y,z, cam, s, w, h):
     yzR = rotate_point(y, z, cam.yRot)
     y = yzR[0]
     z = yzR[1]
-
-    """
-    xr = cam.xRot
-    yr = cam.yRot
-
-    si = math.sin(xr)
-    co = math.cos(xr)
-
-    x = x * co - z * si
-    z = z * co - x * si
-    """
 
     # Distort XY by INV Z DIFFERENCE
     # LARGER DIFFERENCE = SMALLER
@@ -185,8 +173,8 @@ def distort_point(x,y,z, cam, s, w, h):
 
 
 
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
 
 # preloader give animations as a array of the url
@@ -244,27 +232,27 @@ def try_file(file):
 def preload_stage(stage):
     if stage['background']['img'] != None:
         if try_file(stage['background']['img']) == True:
-            get_image(stage['background']['img'], False)
+            get_image(stage['background']['img'])
     if stage['middle_ground']['img'] != None:
         if try_file(stage['middle_ground']['img']) == True:
-            get_image(stage['middle_ground']['img'], False)
+            get_image(stage['middle_ground']['img'])
     if stage['stage_floor']['img'] != None:
         if try_file(stage['stage_floor']['img']) == True:
-            get_image(stage['stage_floor']['img'], True)
+            get_image(stage['stage_floor']['img'])
     if stage['on_floor']['img'] != None:
         if try_file(stage['on_floor']['img']) == True:
-            get_image(stage['on_floor']['img'], True)
+            get_image(stage['on_floor']['img'])
     if stage['foreground']['img'] != None:
         if try_file(stage['foreground']['img']) == True:
-            get_image(stage['foreground']['img'], True)
+            get_image(stage['foreground']['img'])
     if stage['bgm']['source'] != None:
         if try_file(stage['bgm']['source']) == True:
             pygame.mixer.music.load(stage['bgm']['source'])
 
 
 
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
 # def round_near(x, base):
 #     return base * round(x/base)

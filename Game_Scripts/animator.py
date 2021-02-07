@@ -1,38 +1,26 @@
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
-import math,\
-    Game_Scripts.functions
+import math
 
-functions = Game_Scripts.functions
+from Game_Scripts import functions
 
-############################################################################
-############################################################################
+
+
+########################################################################################################################
+########################################################################################################################
 
 # ANIMATIONS
 
-"""
-
-        Example of Sprite and Animation
-
-        self.animationSet = animationSet
-        self.animationCounter = 0
-        self.animationList = []
-        self.moving = False
-        self.combat = True
-
-        "combat_idle" : {
-            "animation_priority": 0,
-            "looped" : True,
-            "delay" : fps/10,
-            "frames" : [
-                "../Sprite_Assets/Sprites/Tank_Sprites/Combat_Idle/Tank_Idle_Frame_1.png",
-            ]
-        }
-"""
-
-
 def animationManager(objects_to_animate, ch):
+    """
+    when this is called it goes through all the objects that need to be animated and decided if the next frame should
+    be displayed
+    :param objects_to_animate: a list of all objects that need to be animated
+    :param ch: a list of all characters
+    :return:
+    """
+
     # list of all objects that need to be animated
     objects_to_animate = objects_to_animate
 
@@ -75,8 +63,16 @@ def animationManager(objects_to_animate, ch):
                 animationPlayer(spriteObj, get_list[0], ch)
 
 
-# universal Play Animation
+
 def animationPlayer(sprite, animation, ch):
+    """
+    this is the universal function for playing an animation, it advances an animation only after it has reached its
+    delay. For example, if an animation has a delay of 5 it will have its animation frame updated every 5 game frames
+    :param sprite: the sprite objects that needs to be animated, class is defined in characters_and_sprites.py
+    :param animation: the animation that is played for the sprite object, animations can be found in animations.py
+    :param ch: a list of characters
+    :return:
+    """
     # if the character exists
     if not ch[sprite.name] is None:
 
@@ -140,14 +136,17 @@ def animationPlayer(sprite, animation, ch):
                 sprite.animationCounter -= 1
 
 
-############################################################################
-############################################################################
 
+########################################################################################################################
+########################################################################################################################
 
-
-#temp adding and removing animations
 def addAnimation(character, animation):
-
+    """
+    adds an animation to the animation queue of a character
+    :param character: character object, class defined in characters_and_sprites.py
+    :param animation: the animation that is to be added to the queue of the character object
+    :return:
+    """
     if not animation in character.spriteObject.animationList :
         #add if only not in list
         character.spriteObject.animationList.append(animation)
@@ -155,12 +154,12 @@ def addAnimation(character, animation):
 
 
 def removeAnimation(character, animation):
-
+    """
+    removes an animation from the queue of a character if it exists in the queue
+    :param character: character object, class defined in characters_and_sprites.py
+    :param animation: the animation that is to be added to the queue of the character object
+    :return:
+    """
     if animation in character.spriteObject.animationList :
         #remove if in list
         character.spriteObject.animationList.remove(animation)
-
-
-
-############################################################################
-############################################################################

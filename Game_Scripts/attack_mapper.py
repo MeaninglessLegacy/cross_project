@@ -1,7 +1,7 @@
-############################################################################
-############################################################################
+########################################################################################################################
+########################################################################################################################
 
-#class to help generate a map of which tiles to hit
+# class to help generate a map of which tiles to hit
 class attack_map():
     def __init__(self, center, forward, backwards, up, down, up_forward, up_backwards, down_forward, down_backwards):
         self.center = center
@@ -14,38 +14,48 @@ class attack_map():
         self.down_forward = down_forward
         self.down_backwards = down_backwards
 
-############################################################################
-############################################################################
 
-#remove duplicate tiles
+
+########################################################################################################################
+########################################################################################################################
 
 def Remove(duplicate):
+    """
+    removes duplicate tiles from the tile list
+    :param duplicate: a list of all current tiles
+    :return: returns the list of tiles with duplicates removed
+    """
     final_list = []
     for item in duplicate:
             if item not in final_list:
                 final_list.append(item)
     return final_list
 
-#Return tiles in map
-
 
 
 def returnTilesHit(chr, map):
+    """
+    using the attack map class defined in attack_mapper.py, generates a list of tiles that are affected by the attack
+    map
+    :param chr: the character objects that the attack map is anchored to
+    :param map: the attack map object that is provided
+    :return:
+    """
 
-    #check if we were passed a map
+    # check if we were passed a map
 
     if isinstance(map, attack_map) == True:
 
-        #chr position
+        # chr position
         chr_pos = chr.stats.current_Tile
 
-        #chr direction
+        # chr direction
         chr_heading = chr.spriteObject.heading
 
-        #tiles hit
+        # tiles hit
         tiles = []
 
-        #determined based on facing direction
+        # determined based on facing direction
         if chr_heading == "-":
             # determine center tile
             centerTile = (chr.stats.current_Tile[0]+map.center[0], chr.stats.current_Tile[1]+map.center[1])
